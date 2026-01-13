@@ -1,0 +1,204 @@
+import { useState, useMemo, useEffect } from "react";
+import { Router } from "@/types/router";
+import { Button } from "@/components/ui/button";
+import { Plus, Search, Filter } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { getAllRouters } from "@/services/routers.services";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import RouterCard from "@/components/RouterCard";
+import RouterFormDialog from "@/components/RouterFormDialog";
+import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
+import { get } from "http";
+
+const RoutersPage = () => {
+  const [routers, setRouters] = useState<Router[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSector, setSelectedSector] = useState("all");
+  const [formDialogOpen, setFormDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedRouter, setSelectedRouter] = useState<Router | null>(null);
+//buscar dados da api
+useEffect(() => {getAllRouters().then(setRouters).catch(console.error);}, []);
+
+  const sectors = useMemo(() => {
+    const uniqueSectors = [...new Set(routers.map((r) => r.setor))];
+    return uniqueSectors.sort();
+  }, [routers]);
+
+  const filteredRouters = useMemo(() => {
+    return routers.filter((router) => {
+      if (selectedSector !== "all" && router.setor !== selectedSector) {
+        return false;
+      }
+
+      if (!searchTerm) return true;
+
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        (router.ssid ?? "").toLowerCase().includes(searchLower) ||
+        (router.ip ?? "").toLowerCase().includes(searchLower) ||
+        (router.senhaRedeWifi ?? "").toLowerCase().includes(searchLower) ||
+        (router.setor ?? "").toLowerCase().includes(searchLower)
+      );
+    });
+  }, [routers, searchTerm, selectedSector]);
+
+  const stats = useMemo(() => {
+    const online = routers.filter((r) => r.status === "online").length;
+    const offline = routers.filter((r) => r.status === "offline").length;
+    const maintenance = routers.filter((r) => r.status === "maintenance").length;
+    return { total: routers.length, online, offline, maintenance };
+  }, [routers]);
+
+  const handleCreate = () => {
+    setSelectedRouter(null);
+    setFormDialogOpen(true);
+  };
+
+  const handleEdit = (router: Router) => {
+    setSelectedRouter(router);
+    setFormDialogOpen(true);
+  };
+
+  const handleDelete = (router: Router) => {
+    setSelectedRouter(router);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleSave = (data: Partial<Router>) => {
+    if (selectedRouter) {
+      setRouters((prev) =>
+        prev.map((r) => (r.id === selectedRouter.id ? { ...r, ...data } : r))
+      );
+    } else {
+      const newRouter: Router = {
+        id: String(Date.now()),
+        ssid: data.ssid || "",
+        ip: data.ip || "",
+        porta: data.porta || "",
+        senhaRedeWifi: data.senhaRedeWifi || "",
+        setor: data.setor || "",
+        senhaConfiguracao: data.senhaConfiguracao || "",
+        loginConfiguracao: data.loginConfiguracao || "",
+        status: data.status || "online",
+      };
+      setRouters((prev) => [...prev, newRouter]);
+    }
+    setFormDialogOpen(false);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedRouter) {
+      setRouters((prev) => prev.filter((r) => r.id !== selectedRouter.id));
+    }
+    setDeleteDialogOpen(false);
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-8 animate-fade-in">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
+            Roteadores
+          </h2>
+          <Button onClick={handleCreate} className="gap-2">
+            <Plus className="w-4 h-4" />
+            Novo Roteador
+          </Button>
+        </div>
+        <p className="text-muted-foreground max-w-2xl">
+          Gerencie todos os roteadores e redes da sua infraestrutura.
+        </p>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+        <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
+          <p className="text-2xl font-bold text-foreground">{stats.total}</p>
+          <p className="text-sm text-muted-foreground">Total</p>
+        </div>
+        <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
+          <p className="text-2xl font-bold text-emerald-500">{stats.online}</p>
+          <p className="text-sm text-muted-foreground">Online</p>
+        </div>
+        <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
+          <p className="text-2xl font-bold text-red-500">{stats.offline}</p>
+          <p className="text-sm text-muted-foreground">Offline</p>
+        </div>
+        <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
+          <p className="text-2xl font-bold text-amber-500">{stats.maintenance}</p>
+          <p className="text-sm text-muted-foreground">Manutenção</p>
+        </div>
+      </div>
+
+      {/* Search */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-8">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Pesquisar roteadores..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 bg-secondary/50 border-border/50"
+          />
+        </div>
+        <Select value={selectedSector} onValueChange={setSelectedSector}>
+          <SelectTrigger className="w-full sm:w-[200px] bg-secondary/50 border-border/50">
+            <Filter className="w-4 h-4 mr-2" />
+            <SelectValue placeholder="Setor" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos os setores</SelectItem>
+            {sectors.map((sector) => (
+              <SelectItem key={sector} value={sector}>
+                {sector}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredRouters.map((router, index) => (
+          <RouterCard
+            key={router.id}
+            router={router}
+            index={index}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        ))}
+      </div>
+
+      {filteredRouters.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 animate-fade-in">
+          <p className="text-lg text-muted-foreground">Nenhum roteador encontrado</p>
+        </div>
+      )}
+
+      <RouterFormDialog
+        open={formDialogOpen}
+        onOpenChange={setFormDialogOpen}
+        router={selectedRouter}
+        onSave={handleSave}
+      />
+
+      <DeleteConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Excluir Roteador"
+        description={`Tem certeza que deseja excluir o roteador "${selectedRouter?.ssid}"? Esta ação não pode ser desfeita.`}
+        onConfirm={handleConfirmDelete}
+      />
+    </div>
+  );
+};
+
+export default RoutersPage;
