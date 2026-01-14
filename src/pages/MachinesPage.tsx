@@ -7,11 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import MachineFormDialog from "@/components/MachineFormDialog";
 import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
-import { getAllMachines, saveMachine, updateMachine, deleteMachine } from "@/services/machines.service";
+import {
+  getAllMachines,
+  saveMachine,
+  updateMachine,
+  deleteMachine,
+} from "@/services/machines.service";
 import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
 
-const MachinesPage = () => { 
+const MachinesPage = () => {
   const { toast } = useToast();
   const [machines, setMachines] = useState<Machine[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -54,50 +60,75 @@ const MachinesPage = () => {
   }, [machines]);
 
   const filteredMachines = useMemo(() => {
-  return machines.filter((machine) => {
-    // 👉 filtro por status (NOVO)
+    return machines.filter((machine) => {
+      // 👉 filtro por status (NOVO)
       if (statusFilter && machine.status !== statusFilter) {
         return false;
       }
-    if (selectedSector !== "all" && machine.setor !== selectedSector) {
-      return false;
-    }
+      if (selectedSector !== "all" && machine.setor !== selectedSector) {
+        return false;
+      }
 
-    if (!searchTerm) return true;
+      if (!searchTerm) return true;
 
-    const searchLower = searchTerm.toLowerCase();
+      const searchLower = searchTerm.toLowerCase();
 
-    switch (filterType) {
-      case "name":
-        return (machine.hostName ?? "").toString().toLowerCase().includes(searchLower);
-      case "ip":
-        return (machine.ip ?? "").toString().toLowerCase().includes(searchLower);
-      case "sector":
-        return (machine.setor ?? "").toString().toLowerCase().includes(searchLower);
-      case "typeArmazenamento":
-        return (machine.tipoArmazenamento ?? "").toString().toLowerCase().includes(searchLower);
-      case "processor":
-        return (machine.processador ?? "").toString().toLowerCase().includes(searchLower);
-      
-      default:
-        return (
-          (machine.hostName ?? "").toString().toLowerCase().includes(searchLower) ||
-          (machine.ip ?? "").toString().toLowerCase().includes(searchLower) ||
-          (machine.setor ?? "").toString().toLowerCase().includes(searchLower) ||
-          (machine.tipoArmazenamento ?? "").toString().toLowerCase().includes(searchLower) ||
-          (machine.processador ?? "").toString().toLowerCase().includes(searchLower)
-        );
-    }
-  });
-}, [machines, statusFilter, selectedSector, searchTerm, filterType]);
+      switch (filterType) {
+        case "name":
+          return (machine.hostName ?? "")
+            .toString()
+            .toLowerCase()
+            .includes(searchLower);
+        case "ip":
+          return (machine.ip ?? "")
+            .toString()
+            .toLowerCase()
+            .includes(searchLower);
+        case "sector":
+          return (machine.setor ?? "")
+            .toString()
+            .toLowerCase()
+            .includes(searchLower);
+        case "typeArmazenamento":
+          return (machine.tipoArmazenamento ?? "")
+            .toString()
+            .toLowerCase()
+            .includes(searchLower);
+        case "processor":
+          return (machine.processador ?? "")
+            .toString()
+            .toLowerCase()
+            .includes(searchLower);
 
-// 🔹 CALLBACK → recebido da StatsBar ao clicar em um card
+        default:
+          return (
+            (machine.hostName ?? "")
+              .toString()
+              .toLowerCase()
+              .includes(searchLower) ||
+            (machine.ip ?? "").toString().toLowerCase().includes(searchLower) ||
+            (machine.setor ?? "")
+              .toString()
+              .toLowerCase()
+              .includes(searchLower) ||
+            (machine.tipoArmazenamento ?? "")
+              .toString()
+              .toLowerCase()
+              .includes(searchLower) ||
+            (machine.processador ?? "")
+              .toString()
+              .toLowerCase()
+              .includes(searchLower)
+          );
+      }
+    });
+  }, [machines, statusFilter, selectedSector, searchTerm, filterType]);
+
+  // 🔹 CALLBACK → recebido da StatsBar ao clicar em um card
   const handleStatusClick = (status: string | null) => {
     // alterna o filtro (clicar de novo remove)
     setStatusFilter((prev) => (prev === status ? null : status));
   };
-
-
   const handleCreate = () => {
     setSelectedMachine(null);
     setFormDialogOpen(true);
@@ -116,33 +147,35 @@ const MachinesPage = () => {
   // 🔹 INTEGRAÇÃO COM API - CRUD
   const handleSave = async (data: Partial<Machine>) => {
     try {
-         // função reutilizável
-    const refreshMachines = async () => {
-      try {
-        setIsLoading(true);
-        const data = await getAllMachines();
-        setMachines(data);
-      } catch (error) {
-        console.error(error);
-        toast({ variant: "destructive", title: "Erro", description: "Falha ao recarregar lista" });
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      // função reutilizável
+      const refreshMachines = async () => {
+        try {
+          setIsLoading(true);
+          const data = await getAllMachines();
+          setMachines(data);
+        } catch (error) {
+          console.error(error);
+          toast({
+            variant: "destructive",
+            title: "Erro",
+            description: "Falha ao recarregar lista",
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      };
       setIsLoading(true);
       if (selectedMachine) {
         // UPDATE
         const updated = await updateMachine(selectedMachine.id, data);
         setMachines((prev) =>
-          prev.map((m) =>
-            (m.id === updated.id ? updated : m)
-          )
+          prev.map((m) => (m.id === updated.id ? updated : m))
         );
         toast({
           title: "Sucesso",
           description: "Máquina atualizada com sucesso!",
         });
-      } else {
+      } else {  
         // CREATE
         const newMachine = await saveMachine(data);
         toast({
@@ -156,18 +189,24 @@ const MachinesPage = () => {
     } catch (error) {
       console.error("Erro ao salvar máquina:", error);
 
-  const errorMessage =
-    error.response?.status === 409
-      ? error.response?.data?.error || "Já existe uma máquina com esse IP."
-      : error.response?.data?.message || "Falha ao salvar máquina. Tente novamente.";
+      let errorMessage = "Falha ao salvar máquina. Tente novamente.";
+      let title = "Erro";
+
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 409) {
+          title = "IP já cadastrado";
+          errorMessage =
+            error.response.data?.error || "Já existe uma máquina com esse IP.";
+        } else {
+          errorMessage = error.response.data?.message || errorMessage;
+        }
+      }
       toast({
-    variant: "destructive",
-    title: error.response?.status === 409 ? "IP já cadastrado" : "Erro",
-    description: errorMessage,
-    });
-    } finally {
-      setIsLoading(false);
-    }
+        variant: "destructive",
+        title,
+        description: errorMessage,
+      });
+    }  
   };
 
   const handleConfirmDelete = async () => {
@@ -176,9 +215,7 @@ const MachinesPage = () => {
     try {
       setIsLoading(true);
       await deleteMachine(selectedMachine.id);
-      setMachines((prev) =>
-        prev.filter((m) => m.id !== selectedMachine.id)
-      );
+      setMachines((prev) => prev.filter((m) => m.id !== selectedMachine.id));
       toast({
         title: "Sucesso",
         description: "Máquina excluída com sucesso!",
@@ -210,16 +247,18 @@ const MachinesPage = () => {
           </Button>
         </div>
         <p className="text-muted-foreground max-w-2xl">
-          Gerencie e monitore todas as máquinas da sua infraestrutura em um só lugar.
+          Gerencie e monitore todas as máquinas da sua infraestrutura em um só
+          lugar.
         </p>
       </div>
 
       <div className="mb-6">
         <StatsBar
-         machines={machines}
-         filteredCount={filteredMachines.length}
-         onStatusClick={handleStatusClick} // ← NOVO
-        activeStatus={statusFilter} />
+          machines={machines}
+          filteredCount={filteredMachines.length}
+          onStatusClick={handleStatusClick} // ← NOVO
+          activeStatus={statusFilter}
+        />
       </div>
 
       <div className="mb-8">

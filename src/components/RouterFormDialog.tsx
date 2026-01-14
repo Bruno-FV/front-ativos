@@ -4,6 +4,7 @@ import { Router } from "@/types/router";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -38,6 +39,7 @@ const RouterFormDialog = ({
       reset(router);
     } else {
       reset({
+        id: "",
         ssid: "",
         ip: "",
         porta: "",
@@ -60,6 +62,7 @@ const RouterFormDialog = ({
         <DialogHeader>
           <DialogTitle className="text-foreground">
             {router ? "Editar Roteador" : "Novo Roteador"}
+            <DialogDescription>Preencha os detalhes da roteador abaixo.</DialogDescription>
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

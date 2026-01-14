@@ -23,7 +23,7 @@ interface MachineFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   machine: Machine | null;
-  onSave: (data: Partial<Machine>) => void;
+  onSave: (data: Partial<Machine>) => void; 
 }
 
 const MachineFormDialog = ({
@@ -55,7 +55,7 @@ const MachineFormDialog = ({
   const onSubmit = (data: Partial<Machine>) => {
     onSave(data);
   };
-
+ 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-card border-border max-w-md">

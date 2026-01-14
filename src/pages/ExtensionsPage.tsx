@@ -92,9 +92,8 @@ const ExtensionsPage = () => {
           });
         } else {
           // CREATE
-          const newEsetSelectedExtension = await saveExtensions(data);
-          setExtensions((prev) => [...prev, newEsetSelectedExtension]);
-          console.log("dados do novo ramal", newEsetSelectedExtension);
+          const newExtension = await saveExtensions(data);
+          setExtensions((prev) => [...prev, newExtension]);
           toast({
             title: "Sucesso",
             description: "Ramal criada com sucesso!",

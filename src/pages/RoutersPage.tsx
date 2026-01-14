@@ -3,7 +3,12 @@ import { Router } from "@/types/router";
 import { Button } from "@/components/ui/button";
 import { Plus, Search, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { getAllRouters } from "@/services/routers.services";
+import {
+  getAllRouters,
+  updateRouter,
+  saveRouter,
+  deleteRouter,
+} from "@/services/routers.services";
 import {
   Select,
   SelectContent,
@@ -14,17 +19,22 @@ import {
 import RouterCard from "@/components/RouterCard";
 import RouterFormDialog from "@/components/RouterFormDialog";
 import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
-import { get } from "http";
+import { toast } from "sonner";
 
 const RoutersPage = () => {
   const [routers, setRouters] = useState<Router[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSector, setSelectedSector] = useState("all");
+    // 🔹 NOVO ESTADO → controla o filtro por status (online/offline/maintenance)
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [formDialogOpen, setFormDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedRouter, setSelectedRouter] = useState<Router | null>(null);
-//buscar dados da api
-useEffect(() => {getAllRouters().then(setRouters).catch(console.error);}, []);
+  const [isLoading, setIsLoading] = useState(false);
+  //buscar dados da api
+  useEffect(() => {
+    getAllRouters().then(setRouters).catch(console.error);
+  }, []);
 
   const sectors = useMemo(() => {
     const uniqueSectors = [...new Set(routers.map((r) => r.setor))];
@@ -33,6 +43,10 @@ useEffect(() => {getAllRouters().then(setRouters).catch(console.error);}, []);
 
   const filteredRouters = useMemo(() => {
     return routers.filter((router) => {
+        // 👉 filtro por status (NOVO)
+      if (statusFilter && router.status !== statusFilter) {
+        return false;
+      }
       if (selectedSector !== "all" && router.setor !== selectedSector) {
         return false;
       }
@@ -47,12 +61,20 @@ useEffect(() => {getAllRouters().then(setRouters).catch(console.error);}, []);
         (router.setor ?? "").toLowerCase().includes(searchLower)
       );
     });
-  }, [routers, searchTerm, selectedSector]);
+  }, [routers, searchTerm, selectedSector , statusFilter]);
+  
+  // 🔹 CALLBACK → recebido da StatsBar ao clicar em um card
+  const handleStatusClick = (status: string | null) => {
+    // alterna o filtro (clicar de novo remove)
+    setStatusFilter((prev) => (prev === status ? null : status));
+  };
 
   const stats = useMemo(() => {
     const online = routers.filter((r) => r.status === "online").length;
     const offline = routers.filter((r) => r.status === "offline").length;
-    const maintenance = routers.filter((r) => r.status === "maintenance").length;
+    const maintenance = routers.filter(
+      (r) => r.status === "maintenance"
+    ).length;
     return { total: routers.length, online, offline, maintenance };
   }, [routers]);
 
@@ -71,31 +93,49 @@ useEffect(() => {getAllRouters().then(setRouters).catch(console.error);}, []);
     setDeleteDialogOpen(true);
   };
 
-  const handleSave = (data: Partial<Router>) => {
-    if (selectedRouter) {
-      setRouters((prev) =>
-        prev.map((r) => (r.id === selectedRouter.id ? { ...r, ...data } : r))
-      );
-    } else {
-      const newRouter: Router = {
-        id: String(Date.now()),
-        ssid: data.ssid || "",
-        ip: data.ip || "",
-        porta: data.porta || "",
-        senhaRedeWifi: data.senhaRedeWifi || "",
-        setor: data.setor || "",
-        senhaConfiguracao: data.senhaConfiguracao || "",
-        loginConfiguracao: data.loginConfiguracao || "",
-        status: data.status || "online",
+  const handleSave = async (data: Partial<Router>) => {
+   
+    try {
+      // função reutilizável
+      const refreshRouters = async () => {
+        const data = await getAllRouters();
+        console.log("Dados atualizados:", data);
+        setRouters(data);
       };
-      setRouters((prev) => [...prev, newRouter]);
+      setIsLoading(true);
+      if (selectedRouter) {
+     
+        //update
+        const updateRouters = await updateRouter(selectedRouter.id, data);
+       
+        setRouters((prev) =>
+          prev.map((r) => (r.id === updateRouters.id ? updateRouters : r))
+        );
+        toast.success("Roteador atualizado com sucesso");
+      } else {
+        //create
+        const newRouter = await saveRouter(data);
+     
+        toast.success("Roteador criado com sucesso");
+      }
+      await refreshRouters();
+    } catch (error) {
+      console.error("Erro ao salvar roteador:", error);
+      toast.error("Erro ao salvar roteador");
     }
     setFormDialogOpen(false);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (selectedRouter) {
-      setRouters((prev) => prev.filter((r) => r.id !== selectedRouter.id));
+      try {
+        await deleteRouter(selectedRouter.id);
+        setRouters((prev) => prev.filter((r) => r.id !== selectedRouter.id));
+        toast.success("Roteador deletado com sucesso");
+      } catch (error) {
+        console.error("Erro ao deletar roteador:", error);
+        toast.error("Erro ao deletar roteador");
+      }
     }
     setDeleteDialogOpen(false);
   };
@@ -116,27 +156,29 @@ useEffect(() => {getAllRouters().then(setRouters).catch(console.error);}, []);
           Gerencie todos os roteadores e redes da sua infraestrutura.
         </p>
       </div>
-
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
-          <p className="text-2xl font-bold text-foreground">{stats.total}</p>
-          <p className="text-sm text-muted-foreground">Total</p>
-        </div>
-        <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
-          <p className="text-2xl font-bold text-emerald-500">{stats.online}</p>
-          <p className="text-sm text-muted-foreground">Online</p>
-        </div>
-        <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
-          <p className="text-2xl font-bold text-red-500">{stats.offline}</p>
-          <p className="text-sm text-muted-foreground">Offline</p>
-        </div>
-        <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
-          <p className="text-2xl font-bold text-amber-500">{stats.maintenance}</p>
-          <p className="text-sm text-muted-foreground">Manutenção</p>
+       <div className="mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
+            <p className="text-2xl font-bold text-foreground">{stats.total}</p>
+            <p className="text-sm text-muted-foreground">Total</p>
+          </div>
+          <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
+            <p className="text-2xl font-bold text-emerald-500">{stats.online}</p>
+            <p className="text-sm text-muted-foreground">Online</p>
+          </div>
+          <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
+            <p className="text-2xl font-bold text-red-500">{stats.offline}</p>
+            <p className="text-sm text-muted-foreground">Offline</p>
+          </div>
+          <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
+            <p className="text-2xl font-bold text-amber-500">
+              {stats.maintenance}
+            </p>
+            <p className="text-sm text-muted-foreground">Manutenção</p>
+          </div>
         </div>
       </div>
-
       {/* Search */}
       <div className="flex flex-col sm:flex-row gap-4 mb-8">
         <div className="relative flex-1">
@@ -179,7 +221,9 @@ useEffect(() => {getAllRouters().then(setRouters).catch(console.error);}, []);
 
       {filteredRouters.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 animate-fade-in">
-          <p className="text-lg text-muted-foreground">Nenhum roteador encontrado</p>
+          <p className="text-lg text-muted-foreground">
+            Nenhum roteador encontrado
+          </p>
         </div>
       )}
 
