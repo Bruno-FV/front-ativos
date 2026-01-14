@@ -69,9 +69,6 @@ const SearchBar = ({
             <SelectItem value="sector">Setor</SelectItem>
             <SelectItem value="typeArmazenamento">Tipo de Armazenamento</SelectItem>
             <SelectItem value="processor">Processador</SelectItem>
-            <SelectItem value="online">Online</SelectItem>
-            <SelectItem value="offline">Offline</SelectItem>
-            <SelectItem value="maintenance">Manutenção</SelectItem>
           </SelectContent>
         </Select>
 

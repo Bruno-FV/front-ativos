@@ -9,7 +9,6 @@ import MachineFormDialog from "@/components/MachineFormDialog";
 import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
 import { getAllMachines, saveMachine, updateMachine, deleteMachine } from "@/services/machines.service";
 import { useToast } from "@/hooks/use-toast";
-import { create } from "domain";
 
 
 const MachinesPage = () => { 
@@ -18,6 +17,10 @@ const MachinesPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [selectedSector, setSelectedSector] = useState("all");
+
+  // 🔹 NOVO ESTADO → controla o filtro por status (online/offline/maintenance)
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+
   const [formDialogOpen, setFormDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
@@ -52,6 +55,10 @@ const MachinesPage = () => {
 
   const filteredMachines = useMemo(() => {
   return machines.filter((machine) => {
+    // 👉 filtro por status (NOVO)
+      if (statusFilter && machine.status !== statusFilter) {
+        return false;
+      }
     if (selectedSector !== "all" && machine.setor !== selectedSector) {
       return false;
     }
@@ -71,26 +78,24 @@ const MachinesPage = () => {
         return (machine.tipoArmazenamento ?? "").toString().toLowerCase().includes(searchLower);
       case "processor":
         return (machine.processador ?? "").toString().toLowerCase().includes(searchLower);
-      case "offline":
-        return machine.status === "offline";
-      case "online":
-        return machine.status === "online";
-      case "maintenance":
-        return machine.status === "maintenance";
+      
       default:
         return (
           (machine.hostName ?? "").toString().toLowerCase().includes(searchLower) ||
           (machine.ip ?? "").toString().toLowerCase().includes(searchLower) ||
           (machine.setor ?? "").toString().toLowerCase().includes(searchLower) ||
           (machine.tipoArmazenamento ?? "").toString().toLowerCase().includes(searchLower) ||
-          (machine.status === "offline") ||
-          (machine.status === "online") ||
-          (machine.status === "maintenance") ||
           (machine.processador ?? "").toString().toLowerCase().includes(searchLower)
         );
     }
   });
-}, [machines, searchTerm, filterType, selectedSector]);
+}, [machines, statusFilter, selectedSector, searchTerm, filterType]);
+
+// 🔹 CALLBACK → recebido da StatsBar ao clicar em um card
+  const handleStatusClick = (status: string | null) => {
+    // alterna o filtro (clicar de novo remove)
+    setStatusFilter((prev) => (prev === status ? null : status));
+  };
 
 
   const handleCreate = () => {
@@ -210,7 +215,11 @@ const MachinesPage = () => {
       </div>
 
       <div className="mb-6">
-        <StatsBar machines={machines} filteredCount={filteredMachines.length} />
+        <StatsBar
+         machines={machines}
+         filteredCount={filteredMachines.length}
+         onStatusClick={handleStatusClick} // ← NOVO
+        activeStatus={statusFilter} />
       </div>
 
       <div className="mb-8">
