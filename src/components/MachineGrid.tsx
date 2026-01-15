@@ -9,7 +9,12 @@ interface MachineGridProps {
   onDelete?: (machine: Machine) => void;
 }
 
-const MachineGrid = ({ machines, isLoading, onEdit, onDelete }: MachineGridProps) => {
+const MachineGrid = ({
+  machines,
+  isLoading,
+  onEdit,
+  onDelete,
+}: MachineGridProps) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -33,7 +38,8 @@ const MachineGrid = ({ machines, isLoading, onEdit, onDelete }: MachineGridProps
           Nenhuma máquina encontrada
         </h3>
         <p className="text-sm text-muted-foreground text-center max-w-md">
-          Tente ajustar os filtros de pesquisa ou verifique se há máquinas cadastradas no sistema.
+          Tente ajustar os filtros de pesquisa ou verifique se há máquinas
+          cadastradas no sistema.
         </p>
       </div>
     );

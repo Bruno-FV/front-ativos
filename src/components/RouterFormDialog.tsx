@@ -32,7 +32,8 @@ const RouterFormDialog = ({
   router,
   onSave,
 }: RouterFormDialogProps) => {
-  const { register, handleSubmit, reset, setValue, watch } = useForm<Partial<Router>>();
+  const { register, handleSubmit, reset, setValue, watch } =
+    useForm<Partial<Router>>();
 
   useEffect(() => {
     if (router) {
@@ -62,7 +63,9 @@ const RouterFormDialog = ({
         <DialogHeader>
           <DialogTitle className="text-foreground">
             {router ? "Editar Roteador" : "Novo Roteador"}
-            <DialogDescription>Preencha os detalhes da roteador abaixo.</DialogDescription>
+            <DialogDescription>
+              Preencha os detalhes da roteador abaixo.
+            </DialogDescription>
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -137,7 +140,9 @@ const RouterFormDialog = ({
             <Label>Status</Label>
             <Select
               value={watch("status") || "online"}
-              onValueChange={(value) => setValue("status", value as Router["status"])}
+              onValueChange={(value) =>
+                setValue("status", value as Router["status"])
+              }
             >
               <SelectTrigger className="bg-secondary/50 border-border/50">
                 <SelectValue />
@@ -157,9 +162,7 @@ const RouterFormDialog = ({
             >
               Cancelar
             </Button>
-            <Button type="submit">
-              {router ? "Salvar" : "Criar"}
-            </Button>
+            <Button type="submit">{router ? "Salvar" : "Criar"}</Button>
           </div>
         </form>
       </DialogContent>

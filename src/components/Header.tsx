@@ -12,7 +12,9 @@ const Header = () => {
             <h1 className="text-xl font-bold tracking-tight text-foreground">
               Iventário<span className="text-primary">HSR</span>
             </h1>
-            <p className="text-xs text-muted-foreground">Sistema de Monitoramento</p>
+            <p className="text-xs text-muted-foreground">
+              Sistema de Monitoramento
+            </p>
           </div>
         </div>
       </div>

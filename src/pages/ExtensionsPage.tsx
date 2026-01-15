@@ -3,7 +3,12 @@ import { Extension } from "@/types/extension";
 import { Button } from "@/components/ui/button";
 import { Plus, Search, Filter, Phone } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { getAllExtensions, saveExtensions, updateExtensions, deleteExtensions } from "@/services/extensions.service";
+import {
+  getAllExtensions,
+  saveExtensions,
+  updateExtensions,
+  deleteExtensions,
+} from "@/services/extensions.service";
 import {
   Select,
   SelectContent,
@@ -22,13 +27,15 @@ const ExtensionsPage = () => {
   const [selectedSector, setSelectedSector] = useState("all");
   const [formDialogOpen, setFormDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedExtension, setSelectedExtension] = useState<Extension | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+  const [selectedExtension, setSelectedExtension] = useState<Extension | null>(
+    null
+  );
+  const [isLoading, setIsLoading] = useState(false);
 
   // 🔹 BUSCA DADOS DA API
-    useEffect(() => {
-      getAllExtensions().then(setExtensions).catch(console.error);
-    }, []);
+  useEffect(() => {
+    getAllExtensions().then(setExtensions).catch(console.error);
+  }, []);
 
   const sectors = useMemo(() => {
     const uniqueSectors = [...new Set(extensions.map((e) => e.setor))];
@@ -50,15 +57,16 @@ const ExtensionsPage = () => {
       );
     });
   }, [extensions, searchTerm, selectedSector]);
-  
+
   //função para lista a quantidade de ramais atovos e inativos
-  const stats = useMemo(() => {/*
+  const stats = useMemo(() => {
+    /*
     const active = extensions.filter((e) => e.status === "active").length;
     const inactive = extensions.filter((e) => e.status === "inactive").length;
     return { total: extensions.length, active, inactive };
     */
-    return { total: extensions.length};
-  }, [extensions]);  
+    return { total: extensions.length };
+  }, [extensions]);
 
   const handleCreate = () => {
     setSelectedExtension(null);
@@ -74,73 +82,74 @@ const ExtensionsPage = () => {
     setSelectedExtension(extension);
     setDeleteDialogOpen(true);
   };
-  // 🔹 INTEGRAÇÃO COM API - CRUD 
+  // 🔹 INTEGRAÇÃO COM API - CRUD
   const handleSave = async (data: Partial<Extension>) => {
-      try {
-        setIsLoading(true);
-        if (selectedExtension) {
-          // UPDATE
-          const updated = await updateExtensions(selectedExtension.id, data);
-          setExtensions((prev) =>
-            prev.map((m) =>
-              m.id === selectedExtension.id ? { ...m, ...updated } : m
-            )
-          );
-          toast({
-            title: "Sucesso",
-            description: "Ramal atualizada com sucesso!",
-          });
-        } else {
-          // CREATE
-          const newExtension = await saveExtensions(data);
-          setExtensions((prev) => [...prev, newExtension]);
-          toast({
-            title: "Sucesso",
-            description: "Ramal criada com sucesso!",
-          });
-        }
-  
-        setFormDialogOpen(false);
-        setSelectedExtension(null);
-      } catch (error) {
-        console.error("Erro ao salvar ramal:", error);
-        const errorMessage = error.response?.data?.message || "Falha ao salvar ramal";
+    try {
+      setIsLoading(true);
+      if (selectedExtension) {
+        // UPDATE
+        const updated = await updateExtensions(selectedExtension.id, data);
+        setExtensions((prev) =>
+          prev.map((m) =>
+            m.id === selectedExtension.id ? { ...m, ...updated } : m
+          )
+        );
         toast({
-          variant: "destructive",
-          title: "Erro",
-          description: errorMessage,
+          title: "Sucesso",
+          description: "Ramal atualizada com sucesso!",
         });
-      } finally {
-        setIsLoading(false);
+      } else {
+        // CREATE
+        const newExtension = await saveExtensions(data);
+        setExtensions((prev) => [...prev, newExtension]);
+        toast({
+          title: "Sucesso",
+          description: "Ramal criada com sucesso!",
+        });
       }
-    };
+
+      setFormDialogOpen(false);
+      setSelectedExtension(null);
+    } catch (error) {
+      console.error("Erro ao salvar ramal:", error);
+      const errorMessage =
+        error.response?.data?.message || "Falha ao salvar ramal";
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: errorMessage,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleConfirmDelete = async () => {
-     if (!selectedExtension) return;
- 
-     try {
-       setIsLoading(true);
-       await deleteExtensions(selectedExtension.id, {});
-       setExtensions((prev) =>
-         prev.filter((m) => m.id !== selectedExtension.id)
-       );
-       toast({
-         title: "Sucesso",
-         description: "Ramal excluído com sucesso!",
-       });
-     } catch (error) {
-       console.error("Erro ao excluir Ramal:", error);
-       toast({
-         variant: "destructive",
-         title: "Erro",
-         description: "Falha ao excluir Ramal",
-       });
-     } finally {
-       setDeleteDialogOpen(false);
-       setSelectedExtension(null);
-       setIsLoading(false);
-     }
-   };
+    if (!selectedExtension) return;
+
+    try {
+      setIsLoading(true);
+      await deleteExtensions(selectedExtension.id, {});
+      setExtensions((prev) =>
+        prev.filter((m) => m.id !== selectedExtension.id)
+      );
+      toast({
+        title: "Sucesso",
+        description: "Ramal excluído com sucesso!",
+      });
+    } catch (error) {
+      console.error("Erro ao excluir Ramal:", error);
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: "Falha ao excluir Ramal",
+      });
+    } finally {
+      setDeleteDialogOpen(false);
+      setSelectedExtension(null);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -221,7 +230,9 @@ const ExtensionsPage = () => {
 
       {filteredExtensions.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 animate-fade-in">
-          <p className="text-lg text-muted-foreground">Nenhum ramal encontrado</p>
+          <p className="text-lg text-muted-foreground">
+            Nenhum ramal encontrado
+          </p>
         </div>
       )}
 

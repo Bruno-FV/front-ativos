@@ -19,13 +19,15 @@ import {
 import RouterCard from "@/components/RouterCard";
 import RouterFormDialog from "@/components/RouterFormDialog";
 import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
-import { toast } from "sonner";
+import RouterStatsBar from "@/components/RouterStatsBar";
+import { useToast } from "@/hooks/use-toast";
 
 const RoutersPage = () => {
+  const { toast } = useToast();
   const [routers, setRouters] = useState<Router[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSector, setSelectedSector] = useState("all");
-    // 🔹 NOVO ESTADO → controla o filtro por status (online/offline/maintenance)
+  // 🔹 NOVO ESTADO → controla o filtro por status (online/offline/maintenance)
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [formDialogOpen, setFormDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -43,7 +45,7 @@ const RoutersPage = () => {
 
   const filteredRouters = useMemo(() => {
     return routers.filter((router) => {
-        // 👉 filtro por status (NOVO)
+      // 👉 filtro por status (NOVO)
       if (statusFilter && router.status !== statusFilter) {
         return false;
       }
@@ -61,8 +63,8 @@ const RoutersPage = () => {
         (router.setor ?? "").toLowerCase().includes(searchLower)
       );
     });
-  }, [routers, searchTerm, selectedSector , statusFilter]);
-  
+  }, [routers, searchTerm, selectedSector, statusFilter]);
+
   // 🔹 CALLBACK → recebido da StatsBar ao clicar em um card
   const handleStatusClick = (status: string | null) => {
     // alterna o filtro (clicar de novo remove)
@@ -94,7 +96,6 @@ const RoutersPage = () => {
   };
 
   const handleSave = async (data: Partial<Router>) => {
-   
     try {
       // função reutilizável
       const refreshRouters = async () => {
@@ -104,24 +105,36 @@ const RoutersPage = () => {
       };
       setIsLoading(true);
       if (selectedRouter) {
-     
         //update
         const updateRouters = await updateRouter(selectedRouter.id, data);
-       
+
         setRouters((prev) =>
           prev.map((r) => (r.id === updateRouters.id ? updateRouters : r))
         );
-        toast.success("Roteador atualizado com sucesso");
+        toast({
+          title: "Sucesso",
+          description: "Máquina criada com sucesso!",
+        });
       } else {
         //create
-        const newRouter = await saveRouter(data);
-     
-        toast.success("Roteador criado com sucesso");
+        try {
+          const newRouter = await saveRouter(data);
+          toast({
+            title: "Sucesso",
+            description: "Máquina criada com sucesso!",
+          });
+        } catch (error) {
+          console.error("Erro ao salvar máquina:", error);
+          const message = error.response?.data?.error || "Erro desconhecido";
+          toast({
+            title: "Erro",
+            description: message,
+          });
+        }
       }
       await refreshRouters();
     } catch (error) {
       console.error("Erro ao salvar roteador:", error);
-      toast.error("Erro ao salvar roteador");
     }
     setFormDialogOpen(false);
   };
@@ -131,10 +144,16 @@ const RoutersPage = () => {
       try {
         await deleteRouter(selectedRouter.id);
         setRouters((prev) => prev.filter((r) => r.id !== selectedRouter.id));
-        toast.success("Roteador deletado com sucesso");
+        toast({
+          title: "Sucesso",
+          description: "Roteador deletado com sucesso!",
+        });
       } catch (error) {
         console.error("Erro ao deletar roteador:", error);
-        toast.error("Erro ao deletar roteador");
+        toast({
+          title: "Erro",
+          description: "Erro ao deletar roteador",
+        });
       }
     }
     setDeleteDialogOpen(false);
@@ -157,28 +176,13 @@ const RoutersPage = () => {
         </p>
       </div>
       {/* Stats */}
-       <div className="mb-6">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
-            <p className="text-2xl font-bold text-foreground">{stats.total}</p>
-            <p className="text-sm text-muted-foreground">Total</p>
-          </div>
-          <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
-            <p className="text-2xl font-bold text-emerald-500">{stats.online}</p>
-            <p className="text-sm text-muted-foreground">Online</p>
-          </div>
-          <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
-            <p className="text-2xl font-bold text-red-500">{stats.offline}</p>
-            <p className="text-sm text-muted-foreground">Offline</p>
-          </div>
-          <div className="bg-gradient-card rounded-lg border border-border/50 p-4">
-            <p className="text-2xl font-bold text-amber-500">
-              {stats.maintenance}
-            </p>
-            <p className="text-sm text-muted-foreground">Manutenção</p>
-          </div>
-        </div>
-      </div>
+      <RouterStatsBar
+        routers={routers}
+        filteredCount={filteredRouters.length}
+        onStatusClick={handleStatusClick}
+        activeStatus={statusFilter}
+      />
+
       {/* Search */}
       <div className="flex flex-col sm:flex-row gap-4 mb-8">
         <div className="relative flex-1">

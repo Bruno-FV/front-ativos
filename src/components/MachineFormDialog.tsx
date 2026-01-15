@@ -23,7 +23,7 @@ interface MachineFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   machine: Machine | null;
-  onSave: (data: Partial<Machine>) => void; 
+  onSave: (data: Partial<Machine>) => void;
 }
 
 const MachineFormDialog = ({
@@ -32,7 +32,8 @@ const MachineFormDialog = ({
   machine,
   onSave,
 }: MachineFormDialogProps) => {
-  const { register, handleSubmit, reset, setValue, watch } = useForm<Partial<Machine>>();
+  const { register, handleSubmit, reset, setValue, watch } =
+    useForm<Partial<Machine>>();
 
   useEffect(() => {
     if (machine) {
@@ -55,14 +56,16 @@ const MachineFormDialog = ({
   const onSubmit = (data: Partial<Machine>) => {
     onSave(data);
   };
- 
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-card border-border max-w-md">
         <DialogHeader>
           <DialogTitle className="text-foreground">
             {machine ? "Editar Máquina" : "Nova Máquina"}
-             <DialogDescription>Preencha os detalhes da máquina abaixo.</DialogDescription>
+            <DialogDescription>
+              Preencha os detalhes da máquina abaixo.
+            </DialogDescription>
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -132,7 +135,7 @@ const MachineFormDialog = ({
                 placeholder="Ex: NVMe SSD"
               />
             </div>
-             <div className="space-y-2">
+            <div className="space-y-2">
               <Label htmlFor="storageType">Pacote Office</Label>
               <Input
                 id="storageType"
@@ -141,7 +144,7 @@ const MachineFormDialog = ({
                 placeholder="Ex: Ativo/Inativo"
               />
             </div>
-             <div className="space-y-2">
+            <div className="space-y-2">
               <Label htmlFor="storageType">Anti-Vírus</Label>
               <Input
                 id="storageType"
@@ -154,7 +157,9 @@ const MachineFormDialog = ({
               <Label>Status</Label>
               <Select
                 value={watch("status") || "online"}
-                onValueChange={(value) => setValue("status", value as Machine["status"])}
+                onValueChange={(value) =>
+                  setValue("status", value as Machine["status"])
+                }
               >
                 <SelectTrigger className="bg-secondary/50 border-border/50">
                   <SelectValue />
@@ -175,9 +180,7 @@ const MachineFormDialog = ({
             >
               Cancelar
             </Button>
-            <Button type="submit">
-              {machine ? "Salvar" : "Criar"}
-            </Button>
+            <Button type="submit">{machine ? "Salvar" : "Criar"}</Button>
           </div>
         </form>
       </DialogContent>

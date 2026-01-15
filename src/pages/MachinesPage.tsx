@@ -14,8 +14,6 @@ import {
   deleteMachine,
 } from "@/services/machines.service";
 import { useToast } from "@/hooks/use-toast";
-import axios from "axios";
-
 
 const MachinesPage = () => {
   const { toast } = useToast();
@@ -24,7 +22,7 @@ const MachinesPage = () => {
   const [filterType, setFilterType] = useState("all");
   const [selectedSector, setSelectedSector] = useState("all");
 
-  // 🔹 NOVO ESTADO → controla o filtro por status (online/offline/maintenance)
+  // NOVO ESTADO → controla o filtro por status (online/offline/maintenance)
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
   const [formDialogOpen, setFormDialogOpen] = useState(false);
@@ -124,7 +122,7 @@ const MachinesPage = () => {
     });
   }, [machines, statusFilter, selectedSector, searchTerm, filterType]);
 
-  // 🔹 CALLBACK → recebido da StatsBar ao clicar em um card
+  // CALLBACK → recebido da StatsBar ao clicar em um card
   const handleStatusClick = (status: string | null) => {
     // alterna o filtro (clicar de novo remove)
     setStatusFilter((prev) => (prev === status ? null : status));
@@ -144,10 +142,10 @@ const MachinesPage = () => {
     setDeleteDialogOpen(true);
   };
 
-  // 🔹 INTEGRAÇÃO COM API - CRUD
+  // INTEGRAÇÃO COM API - CRUD
   const handleSave = async (data: Partial<Machine>) => {
     try {
-      // função reutilizável
+      // função reload /all
       const refreshMachines = async () => {
         try {
           setIsLoading(true);
@@ -175,38 +173,34 @@ const MachinesPage = () => {
           title: "Sucesso",
           description: "Máquina atualizada com sucesso!",
         });
-      } else {  
-        // CREATE
-        const newMachine = await saveMachine(data);
-        toast({
-          title: "Sucesso",
-          description: "Máquina criada com sucesso!",
-        });
+      } else {
+        try {
+          // CREATE
+          const newMachine = await saveMachine(data);
+          toast({
+            title: "Sucesso",
+            description: "Máquina criada com sucesso!",
+          });
+        } catch (error) {
+          console.error("Erro ao salvar máquina:", error);
+          const message = error.response?.data?.error || "Erro desconhecido";
+          toast({
+            title: "Erro",
+            description: message,
+          });
+        }
       }
       await refreshMachines();
       setFormDialogOpen(false);
       setSelectedMachine(null);
     } catch (error) {
       console.error("Erro ao salvar máquina:", error);
-
-      let errorMessage = "Falha ao salvar máquina. Tente novamente.";
-      let title = "Erro";
-
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 409) {
-          title = "IP já cadastrado";
-          errorMessage =
-            error.response.data?.error || "Já existe uma máquina com esse IP.";
-        } else {
-          errorMessage = error.response.data?.message || errorMessage;
-        }
-      }
       toast({
         variant: "destructive",
-        title,
-        description: errorMessage,
+        title: "Erro",
+        description: "Falha ao salvar máquina. Tente novamente.",
       });
-    }  
+    }
   };
 
   const handleConfirmDelete = async () => {

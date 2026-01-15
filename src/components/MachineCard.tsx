@@ -1,15 +1,15 @@
 import { Machine } from "@/types/machine";
-import { 
-  Cpu, 
-  HardDrive, 
-  MemoryStick, 
-  Network, 
+import {
+  Cpu,
+  HardDrive,
+  MemoryStick,
+  Network,
   Server,
   Building2,
   Edit,
   Trash2,
   Notebook,
-  Shield
+  Shield,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -20,7 +20,12 @@ interface MachineCardProps {
   onDelete?: (machine: Machine) => void;
 }
 
-const MachineCard = ({ machine, index, onEdit, onDelete }: MachineCardProps) => {
+const MachineCard = ({
+  machine,
+  index,
+  onEdit,
+  onDelete,
+}: MachineCardProps) => {
   const getStatusColor = (status?: string) => {
     switch (status) {
       case "online":
@@ -54,8 +59,14 @@ const MachineCard = ({ machine, index, onEdit, onDelete }: MachineCardProps) => 
     >
       {/* Status Indicator */}
       <div className="absolute top-4 right-4 flex items-center gap-2">
-        <span className="text-xs text-muted-foreground">{getStatusText(machine.status)}</span>
-        <div className={`w-2 h-2 rounded-full ${getStatusColor(machine.status)} animate-pulse`} />
+        <span className="text-xs text-muted-foreground">
+          {getStatusText(machine.status)}
+        </span>
+        <div
+          className={`w-2 h-2 rounded-full ${getStatusColor(
+            machine.status
+          )} animate-pulse`}
+        />
       </div>
 
       {/* Header */}
@@ -69,7 +80,9 @@ const MachineCard = ({ machine, index, onEdit, onDelete }: MachineCardProps) => 
           </h3>
           <div className="flex items-center gap-2 mt-1">
             <Network className="w-3 h-3 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground font-mono">{machine.ip}</span>
+            <span className="text-sm text-muted-foreground font-mono">
+              {machine.ip}
+            </span>
           </div>
         </div>
       </div>
@@ -77,7 +90,9 @@ const MachineCard = ({ machine, index, onEdit, onDelete }: MachineCardProps) => 
       {/* Sector Badge */}
       <div className="flex items-center gap-2 mb-4">
         <Building2 className="w-4 h-4 text-primary" />
-        <span className="text-sm font-medium text-primary">{machine.setor}</span>
+        <span className="text-sm font-medium text-primary">
+          {machine.setor}
+        </span>
       </div>
 
       {/* Specs Grid */}
@@ -86,7 +101,9 @@ const MachineCard = ({ machine, index, onEdit, onDelete }: MachineCardProps) => 
           <Cpu className="w-4 h-4 text-muted-foreground flex-shrink-0" />
           <div className="min-w-0">
             <p className="text-xs text-muted-foreground">Processador</p>
-            <p className="text-sm text-foreground truncate">{machine.processador}</p>
+            <p className="text-sm text-foreground truncate">
+              {machine.processador}
+            </p>
           </div>
         </div>
 
@@ -103,7 +120,10 @@ const MachineCard = ({ machine, index, onEdit, onDelete }: MachineCardProps) => 
           <div className="min-w-0">
             <p className="text-xs text-muted-foreground">Armazenamento</p>
             <p className="text-sm text-foreground">
-              {machine.armazenamento} <span className="text-muted-foreground">({machine.tipoArmazenamento})</span>
+              {machine.armazenamento}{" "}
+              <span className="text-muted-foreground">
+                ({machine.tipoArmazenamento})
+              </span>
             </p>
           </div>
         </div>

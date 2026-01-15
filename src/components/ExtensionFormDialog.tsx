@@ -31,7 +31,8 @@ const ExtensionFormDialog = ({
   extension,
   onSave,
 }: ExtensionFormDialogProps) => {
-  const { register, handleSubmit, reset, setValue, watch } = useForm<Partial<Extension>>();
+  const { register, handleSubmit, reset, setValue, watch } =
+    useForm<Partial<Extension>>();
 
   useEffect(() => {
     if (extension) {
@@ -67,7 +68,7 @@ const ExtensionFormDialog = ({
               placeholder="Ex: 1001"
             />
           </div>
-         {/* <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label htmlFor="name">Nome / Descrição</Label>
             <Input
               id="name"
@@ -99,7 +100,9 @@ const ExtensionFormDialog = ({
             <Label>Status</Label>
             <Select
               value={watch("status") || "active"}
-              onValueChange={(value) => setValue("status", value as Extension["status"])}
+              onValueChange={(value) =>
+                setValue("status", value as Extension["status"])
+              }
             >
               <SelectTrigger className="bg-secondary/50 border-border/50">
                 <SelectValue />
@@ -118,9 +121,7 @@ const ExtensionFormDialog = ({
             >
               Cancelar
             </Button>
-            <Button type="submit">
-              {extension ? "Salvar" : "Criar"}
-            </Button>
+            <Button type="submit">{extension ? "Salvar" : "Criar"}</Button>
           </div>
         </form>
       </DialogContent>

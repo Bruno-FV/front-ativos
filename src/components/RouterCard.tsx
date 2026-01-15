@@ -1,5 +1,15 @@
 import { Router } from "@/types/router";
-import { Wifi, Network, Building2, Key, User, Edit, Trash2, Eye, EyeOff } from "lucide-react";
+import {
+  Wifi,
+  Network,
+  Building2,
+  Key,
+  User,
+  Edit,
+  Trash2,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -47,8 +57,14 @@ const RouterCard = ({ router, index, onEdit, onDelete }: RouterCardProps) => {
     >
       {/* Status Indicator */}
       <div className="absolute top-4 right-4 flex items-center gap-2">
-        <span className="text-xs text-muted-foreground">{getStatusText(router.status)}</span>
-        <div className={`w-2 h-2 rounded-full ${getStatusColor(router.status)} animate-pulse`} />
+        <span className="text-xs text-muted-foreground">
+          {getStatusText(router.status)}
+        </span>
+        <div
+          className={`w-2 h-2 rounded-full ${getStatusColor(
+            router.status
+          )} animate-pulse`}
+        />
       </div>
 
       {/* Header */}
@@ -57,12 +73,12 @@ const RouterCard = ({ router, index, onEdit, onDelete }: RouterCardProps) => {
           <Wifi className="w-6 h-6 text-primary" />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-foreground truncate group-hover:text-primary transition-colors duration-300">
-            
-          </h3>
+          <h3 className="font-semibold text-foreground truncate group-hover:text-primary transition-colors duration-300"></h3>
           <div className="flex items-center gap-2 mt-1">
             <Network className="w-3 h-3 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground font-mono">{router.ip}</span>
+            <span className="text-sm text-muted-foreground font-mono">
+              {router.ip}
+            </span>
           </div>
         </div>
       </div>
@@ -95,7 +111,11 @@ const RouterCard = ({ router, index, onEdit, onDelete }: RouterCardProps) => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
-                {showPassword ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                {showPassword ? (
+                  <EyeOff className="w-3 h-3" />
+                ) : (
+                  <Eye className="w-3 h-3" />
+                )}
               </button>
             </div>
           </div>
@@ -107,13 +127,18 @@ const RouterCard = ({ router, index, onEdit, onDelete }: RouterCardProps) => {
             <p className="text-xs text-muted-foreground">Acesso Configuração</p>
             <div className="flex items-center gap-2">
               <p className="text-sm text-foreground font-mono">
-                {router.loginConfiguracao} / {showConfigPassword ? router.senhaConfiguracao : "••••••"}
+                {router.loginConfiguracao} /{" "}
+                {showConfigPassword ? router.senhaConfiguracao : "••••••"}
               </p>
               <button
                 onClick={() => setShowConfigPassword(!showConfigPassword)}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
-                {showConfigPassword ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                {showConfigPassword ? (
+                  <EyeOff className="w-3 h-3" />
+                ) : (
+                  <Eye className="w-3 h-3" />
+                )}
               </button>
             </div>
           </div>

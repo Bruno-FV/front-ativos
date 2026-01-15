@@ -8,8 +8,6 @@ export async function getAllMachines(): Promise<Machine[]> {
 
 export const saveMachine = async (data: Partial<Machine>) => {
   const response = await api.post(`/machines/save`, data);
-  console.log("RETORNO AXIOS:", response);
-  console.log("RETORNO DATA:", response.data);
   return response.data;
 };
 export const updateMachine = async (id: string, data: Partial<Machine>) => {

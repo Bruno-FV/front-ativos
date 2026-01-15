@@ -9,7 +9,12 @@ interface ExtensionCardProps {
   onDelete: (extension: Extension) => void;
 }
 
-const ExtensionCard = ({ extension, index, onEdit, onDelete }: ExtensionCardProps) => {
+const ExtensionCard = ({
+  extension,
+  index,
+  onEdit,
+  onDelete,
+}: ExtensionCardProps) => {
   const getStatusColor = (status?: string) => {
     switch (status) {
       case "active":
@@ -39,8 +44,14 @@ const ExtensionCard = ({ extension, index, onEdit, onDelete }: ExtensionCardProp
     >
       {/* Status Indicator */}
       <div className="absolute top-4 right-4 flex items-center gap-2">
-        <span className="text-xs text-muted-foreground">{getStatusText(extension.status)}</span>
-        <div className={`w-2 h-2 rounded-full ${getStatusColor(extension.status)} animate-pulse`} />
+        <span className="text-xs text-muted-foreground">
+          {getStatusText(extension.status)}
+        </span>
+        <div
+          className={`w-2 h-2 rounded-full ${getStatusColor(
+            extension.status
+          )} animate-pulse`}
+        />
       </div>
 
       {/* Header */}
@@ -60,7 +71,9 @@ const ExtensionCard = ({ extension, index, onEdit, onDelete }: ExtensionCardProp
       <div className="space-y-2 mb-4">
         <div className="flex items-center gap-2">
           <Building2 className="w-4 h-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">{extension.setor}</span>
+          <span className="text-sm text-muted-foreground">
+            {extension.setor}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-muted-foreground" />

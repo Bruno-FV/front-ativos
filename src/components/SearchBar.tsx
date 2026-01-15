@@ -67,7 +67,9 @@ const SearchBar = ({
             <SelectItem value="name">Nome</SelectItem>
             <SelectItem value="ip">IP</SelectItem>
             <SelectItem value="sector">Setor</SelectItem>
-            <SelectItem value="typeArmazenamento">Tipo de Armazenamento</SelectItem>
+            <SelectItem value="typeArmazenamento">
+              Tipo de Armazenamento
+            </SelectItem>
             <SelectItem value="processor">Processador</SelectItem>
           </SelectContent>
         </Select>
@@ -95,7 +97,10 @@ const SearchBar = ({
           {searchTerm && (
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-primary/20 text-primary border border-primary/30">
               "{searchTerm}"
-              <button onClick={() => onSearchChange("")} className="ml-1 hover:text-primary-foreground">
+              <button
+                onClick={() => onSearchChange("")}
+                className="ml-1 hover:text-primary-foreground"
+              >
                 <X className="w-3 h-3" />
               </button>
             </span>
@@ -103,7 +108,10 @@ const SearchBar = ({
           {selectedSector !== "all" && (
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground border border-border">
               {selectedSector}
-              <button onClick={() => onSectorChange("all")} className="ml-1 hover:text-foreground">
+              <button
+                onClick={() => onSectorChange("all")}
+                className="ml-1 hover:text-foreground"
+              >
                 <X className="w-3 h-3" />
               </button>
             </span>

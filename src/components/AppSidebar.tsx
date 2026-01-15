@@ -12,7 +12,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
-  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 
@@ -40,7 +39,9 @@ export function AppSidebar() {
                 <span className="text-foreground">Iventário</span>
                 <span className="text-primary">HSR</span>
               </h1>
-              <p className="text-xs text-muted-foreground">Sistema de Monitoramento</p>
+              <p className="text-xs text-muted-foreground">
+                Sistema de Monitoramento
+              </p>
             </div>
           )}
         </div>
@@ -55,7 +56,11 @@ export function AppSidebar() {
                 const isActive = location.pathname === item.url;
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={isActive} tooltip={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      tooltip={item.title}
+                    >
                       <NavLink
                         to={item.url}
                         className="flex items-center gap-3 hover:bg-muted/50 transition-colors"
