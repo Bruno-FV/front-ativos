@@ -19,6 +19,7 @@ const menuItems = [
   { title: "Máquinas", url: "/", icon: Server },
   { title: "Roteadores", url: "/routers", icon: Wifi },
   { title: "Ramais", url: "/extensions", icon: Phone },
+  { title: "HSR Ramais", url: "/extensionsPublic", icon: Phone },
 ];
 
 export function AppSidebar() {

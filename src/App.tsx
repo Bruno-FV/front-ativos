@@ -7,6 +7,7 @@ import MainLayout from "./components/MainLayout";
 import MachinesPage from "./pages/MachinesPage";
 import RoutersPage from "./pages/RoutersPage";
 import ExtensionsPage from "./pages/ExtensionsPage";
+import ExtensionsPublic from "./pages/ExtensionsPublic";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<MachinesPage />} />
             <Route path="/routers" element={<RoutersPage />} />
             <Route path="/extensions" element={<ExtensionsPage />} />
+            <Route path="/extensionsPublic" element={<ExtensionsPublic />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
