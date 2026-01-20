@@ -128,7 +128,7 @@ const LicenseFormDialog = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="active">Ativo</SelectItem>
-                <SelectItem value="inactive">Expirado</SelectItem>
+                <SelectItem value="inactive">inativo</SelectItem>
               </SelectContent>
             </Select>
           </div>

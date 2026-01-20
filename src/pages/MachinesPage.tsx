@@ -3,6 +3,7 @@ import SearchBar from "@/components/SearchBar";
 import MachineGrid from "@/components/MachineGrid";
 import StatsBar from "@/components/StatsBar";
 import { Machine } from "@/types/machine";
+import { cadLicense } from "@/types/cadLicense";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import MachineFormDialog from "@/components/MachineFormDialog";
@@ -13,7 +14,9 @@ import {
   updateMachine,
   deleteMachine,
 } from "@/services/machines.service";
+import { getAllLicenses } from "@/services/license.service";
 import { useToast } from "@/hooks/use-toast";
+import LicenseAntiVirus from './LicenseAntiVirus';
 
 const MachinesPage = () => {
   const { toast } = useToast();
@@ -35,8 +38,24 @@ const MachinesPage = () => {
     const fetchMachines = async () => {
       try {
         setIsLoading(true);
-        const data = await getAllMachines();
-        setMachines(data);
+        const machinesData = await getAllMachines();
+        let licensesData: cadLicense[] = [];
+        try {
+          licensesData = await getAllLicenses();
+        } catch (licenseError) {
+          console.warn("Erro ao buscar licenças, definindo status como inativo:", licenseError);
+        }
+        // Computa o status da licença de antivírus para cada máquina
+        const machinesWithStatus = machinesData.map((machine) => {
+          const matchingLicense = licensesData.find(
+            (license) => license.keyLisence === machine.antVirusLicense
+          );
+          return {
+            ...machine,
+            antVirusStatus: matchingLicense ? matchingLicense.status : "inactive",
+          };
+        });
+        setMachines(machinesWithStatus);
       } catch (error) {
         console.error("Erro ao buscar máquinas:", error);
         toast({
@@ -142,26 +161,40 @@ const MachinesPage = () => {
     setDeleteDialogOpen(true);
   };
 
+  // função reload /all
+  const refreshMachines = async () => {
+    try {
+      setIsLoading(true);
+      const [machinesData, licensesData] = await Promise.all([
+        getAllMachines(),
+        getAllLicenses(),
+      ]);
+      // Computa o status da licença de antivírus para cada máquina
+      const machinesWithStatus = machinesData.map((machine) => {
+        const matchingLicense = licensesData.find(
+          (license) => license.keyLisence === machine.antVirusLicense
+        );
+        return {
+          ...machine,
+          antVirusStatus: matchingLicense ? matchingLicense.status : "inactive",
+        };
+      });
+      setMachines(machinesWithStatus);
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: "Falha ao recarregar lista",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // INTEGRAÇÃO COM API - CRUD
   const handleSave = async (data: Partial<Machine>) => {
     try {
-      // função reload /all
-      const refreshMachines = async () => {
-        try {
-          setIsLoading(true);
-          const data = await getAllMachines();
-          setMachines(data);
-        } catch (error) {
-          console.error(error);
-          toast({
-            variant: "destructive",
-            title: "Erro",
-            description: "Falha ao recarregar lista",
-          });
-        } finally {
-          setIsLoading(false);
-        }
-      };
       setIsLoading(true);
       if (selectedMachine) {
         // UPDATE

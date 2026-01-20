@@ -8,7 +8,8 @@ export interface Machine {
   memoria: string;
   armazenamento: string;
   tipoArmazenamento: string;
-  antVirus: string;
+  antVirusLicense: string;
   licensaOffice: string;
+  antVirusStatus?: string;
   status?: 'online' | 'offline' | 'maintenance';
 }

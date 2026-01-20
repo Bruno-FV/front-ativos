@@ -37,6 +37,8 @@ const MachineFormDialog = ({
   const [licenses, setLicenses] = useState<cadLicense[]>([]);
   const { register, handleSubmit, reset, setValue, watch } =
     useForm<Partial<Machine>>();
+  // Adicionado estado para controlar o ID da licença selecionada no Select, garantindo que a seleção funcione corretamente
+  const [selectedLicenseId, setSelectedLicenseId] = useState<string>("");
 
   useEffect(() => {
     const fetchLicenses = async () => {
@@ -53,7 +55,11 @@ const MachineFormDialog = ({
 
   useEffect(() => {
     if (machine) {
+      console.log("verificando array: ", machine);
       reset(machine);
+      // Correção: Definir o ID da licença selecionada baseado na keyLisence da máquina existente para que o Select mostre a seleção correta
+      const matchingLicense = licenses.find(l => l.keyLisence === machine.antVirusLicense);
+      setSelectedLicenseId(matchingLicense ? matchingLicense.id : "");
     } else {
       reset({
         id: "",
@@ -64,10 +70,15 @@ const MachineFormDialog = ({
         memoria: "",
         armazenamento: "",
         tipoArmazenamento: "",
+        antVirusLicense: "",
+        licensaOffice: "",
+        antVirusStatus: "",
         status: "online",
       });
+      // Correção: Resetar o ID da licença selecionada para nova máquina
+      setSelectedLicenseId("");
     }
-  }, [machine, reset]);
+  }, [machine, reset, licenses]);
 
   const onSubmit = (data: Partial<Machine>) => {
     onSave(data);
@@ -161,12 +172,14 @@ const MachineFormDialog = ({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="antVirus">Anti-Vírus</Label>
+              <Label htmlFor="antVirusLicense">Anti-Vírus</Label>
               <Select
-                value={watch("antVirus") || ""}
-                onValueChange={(value) =>
-                  setValue("antVirus", value)
-                }
+                value={selectedLicenseId}
+                onValueChange={(value) => {
+                  setSelectedLicenseId(value);
+                  // Correção: Definir o antVirusLicense com o ID da licença selecionada para salvar corretamente
+                  setValue("antVirusLicense", value);
+                }}
               >
                 <SelectTrigger className="bg-secondary/50 border-border/50">
                   <SelectValue placeholder="Selecione uma licença" />
@@ -177,6 +190,7 @@ const MachineFormDialog = ({
                       {license.versionAntiVirus} - {license.keyLisence}
                     </SelectItem>
                   ))}
+                  <SelectItem value="null">Sem Licença</SelectItem>
                 </SelectContent>
               </Select>
             </div>

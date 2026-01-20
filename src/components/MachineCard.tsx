@@ -138,7 +138,11 @@ const MachineCard = ({
           <Shield className="w-4 h-4 text-muted-foreground flex-shrink-0" />
           <div className="min-w-0">
             <p className="text-xs text-muted-foreground">Anti-Virus</p>
-            <p className="text-sm text-foreground">{machine.antVirus}</p>
+            <p className="text-sm text-foreground">
+              {machine.antVirusStatus === 'active' ? 'Ativo' :
+               machine.antVirusStatus === 'inactive' ? 'Inativo' :
+               machine.antVirusStatus || 'Sem Licença'}
+            </p>
           </div>
         </div>
       </div>
