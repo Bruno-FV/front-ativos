@@ -37,14 +37,15 @@ const LicenseFormDialog = ({
 
   useEffect(() => {
     if (license) {
+
       reset(license);
     } else {
       reset({
         id: "",
         keyLisence: "",
-        dateStartLisence: new Date().toISOString().split('T')[0],
-        dateEndLisence: new Date().toISOString().split('T')[0],
-        registrationDate: new Date().toISOString().split('T')[0],
+        dateStartLisence: "",
+        dateEndLisence: "",
+        registrationDate: "",
         versionAntiVirus: "",
         status: "active",
       });
@@ -87,31 +88,31 @@ const LicenseFormDialog = ({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="startDate">Data de Início</Label>
+              <Label htmlFor="dateStartLisence">Data de Início</Label>
               <Input
-                id="startDate"
+                id="dateStartLisence"
                 type="date"
                 {...register("dateStartLisence", { required: true })}
                 className="bg-secondary/50 border-border/50"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="endDate">Data de Fim</Label>
+              <Label htmlFor="dateEndLisence">Data de Fim</Label>
               <Input
-                id="endDate"
+                id="dateEndLisence"
                 type="date"
                 {...register("dateEndLisence", { required: true })}
                 className="bg-secondary/50 border-border/50"
               />
             </div>
           </div>
-           <div className="space-y-2">
+          <div className="space-y-2">
             <Label htmlFor="registrationDate">Data do Registro</Label>
             <Input
               id="registrationDate"
+              type="date"
               {...register("registrationDate", { required: true })}
               className="bg-secondary/50 border-border/50"
-              placeholder="Ex: XX/XX/XXXX"
             />
           </div>
           <div className="space-y-2">
@@ -127,6 +128,7 @@ const LicenseFormDialog = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="active">Ativo</SelectItem>
+                <SelectItem value="inactive">Expirado</SelectItem>
               </SelectContent>
             </Select>
           </div>

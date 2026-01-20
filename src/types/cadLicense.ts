@@ -6,5 +6,5 @@ export interface cadLicense {
     dateEndLisence: string;
     registrationDate: string;
     versionAntiVirus: string;
-    status: string;
+    status?: 'active' | 'inactive';
 }

@@ -21,7 +21,7 @@ const menuItems = [
   { title: "Roteadores", url: "/routers", icon: Wifi },
   { title: "Ramais", url: "/extensions", icon: Phone },
   { title: "HSR Ramais", url: "/extensionsPublic", icon: Phone },
-  { title: "licenças", url: "/license", icon: Shield},
+  { title: "Licenças", url: "/license", icon: Shield},
 ];
 
 export function AppSidebar() {

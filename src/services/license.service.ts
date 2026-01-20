@@ -3,7 +3,15 @@ import { cadLicense } from "@/types/cadLicense";
 
 export async function getAllLicenses(): Promise<cadLicense[]> {
   const response = await api.get("/licenses/all");
-  return response.data;
+  // Alteração: Validação automática do status das licenças baseada na data de expiração
+  const licenses = response.data.map((license: cadLicense) => {
+    const isExpired = new Date(license.dateEndLisence) < new Date();
+    return {
+      ...license,
+      status: isExpired ? 'inactive' : 'active',
+    };
+  });
+  return licenses;
 }
 
 export const saveLicense = async (data: Partial<cadLicense>) => {

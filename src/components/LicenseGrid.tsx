@@ -28,14 +28,13 @@ const LicenseGrid = ({ licenses, onEdit, onDelete }: LicenseGridProps) => {
           <CardContent className="space-y-3">
             <div className="text-sm text-muted-foreground">
               <p><strong>Chave:</strong> {license.keyLisence}</p>
-              <p><strong>Início:</strong> {new Date(license.dateStartLisence).toLocaleDateString()}</p>
-              <p><strong>Fim:</strong> {new Date(license.dateEndLisence).toLocaleDateString()}</p>
-              <p><strong>Registro:</strong> {license.registrationDate}</p>
+              <p><strong>Início:</strong> {new Date(license.dateStartLisence.split('/').reverse().join('-')).toLocaleDateString()}</p>
+              <p><strong>Fim:</strong> {new Date(license.dateEndLisence.split('/').reverse().join('-')).toLocaleDateString()}</p>
+              <p><strong>Registro:</strong> {new Date(license.registrationDate.split('/').reverse().join('-')).toLocaleDateString()}</p>
               <div className="flex gap-2 pt-2">
                 <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onEdit(license)}
                 className="flex-1"
               >
                 <Server className="w-4 h-4 mr-2" />
