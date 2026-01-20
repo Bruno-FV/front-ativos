@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Machine } from "@/types/machine";
+import { cadLicense } from "@/types/cadLicense";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getAllLicenses } from "@/services/license.service";
 
 interface MachineFormDialogProps {
   open: boolean;
@@ -32,8 +34,22 @@ const MachineFormDialog = ({
   machine,
   onSave,
 }: MachineFormDialogProps) => {
+  const [licenses, setLicenses] = useState<cadLicense[]>([]);
   const { register, handleSubmit, reset, setValue, watch } =
     useForm<Partial<Machine>>();
+
+  useEffect(() => {
+    const fetchLicenses = async () => {
+      try {
+        const data = await getAllLicenses();
+        setLicenses(data);
+      } catch (error) {
+        console.error("Erro ao buscar licenças:", error);
+      }
+    };
+
+    fetchLicenses();
+  }, []);
 
   useEffect(() => {
     if (machine) {
@@ -145,13 +161,24 @@ const MachineFormDialog = ({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="storageType">Anti-Vírus</Label>
-              <Input
-                id="storageType"
-                {...register("antVirus", { required: true })}
-                className="bg-secondary/50 border-border/50"
-                placeholder="Ex: Ativo/Inativo"
-              />
+              <Label htmlFor="antVirus">Anti-Vírus</Label>
+              <Select
+                value={watch("antVirus") || ""}
+                onValueChange={(value) =>
+                  setValue("antVirus", value)
+                }
+              >
+                <SelectTrigger className="bg-secondary/50 border-border/50">
+                  <SelectValue placeholder="Selecione uma licença" />
+                </SelectTrigger>
+                <SelectContent>
+                  {licenses.map((license) => (
+                    <SelectItem key={license.id} value={license.id}>
+                      {license.versionAntiVirus} - {license.keyLisence}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
               <Label>Status</Label>

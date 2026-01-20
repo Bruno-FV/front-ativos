@@ -9,6 +9,8 @@ import RoutersPage from "./pages/RoutersPage";
 import ExtensionsPage from "./pages/ExtensionsPage";
 import ExtensionsPublic from "./pages/ExtensionsPublic";
 import NotFound from "./pages/NotFound";
+import path from 'path';
+import LicenseAntiVirus from "./pages/LicenseAntiVirus";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +26,7 @@ const App = () => (
             <Route path="/routers" element={<RoutersPage />} />
             <Route path="/extensions" element={<ExtensionsPage />} />
             <Route path="/extensionsPublic" element={<ExtensionsPublic />} />
+            <Route path="/license" element={<LicenseAntiVirus />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

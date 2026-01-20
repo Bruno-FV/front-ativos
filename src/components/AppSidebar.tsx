@@ -1,4 +1,4 @@
-import { Server, Wifi, Phone, PanelLeft } from "lucide-react";
+import { Server, Wifi, Phone, PanelLeft, Icon, Shield } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 
@@ -14,12 +14,14 @@ import {
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { title } from "process";
 
 const menuItems = [
   { title: "Máquinas", url: "/", icon: Server },
   { title: "Roteadores", url: "/routers", icon: Wifi },
   { title: "Ramais", url: "/extensions", icon: Phone },
   { title: "HSR Ramais", url: "/extensionsPublic", icon: Phone },
+  { title: "licenças", url: "/license", icon: Shield},
 ];
 
 export function AppSidebar() {
