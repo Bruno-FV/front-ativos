@@ -1,22 +1,8 @@
-# TODO: Fix Antivirus License Status Display in Machine Cards
+# TODO: Implement Machines per License Feature
 
-## Steps to Complete
-
-- [x] Add `antVirusStatus` field to Machine interface in `src/types/machine.ts`
-- [x] Modify `src/pages/MachinesPage.tsx` to use antivirus status from back-ativos backend
-- [x] Update `src/components/MachineCard.tsx` to display `antVirusStatus` with correct Portuguese labels
-- [x] Test the application to ensure statuses are displayed correctly
-
-## Details
-
-1. **Machine Interface Update**: Added `antVirusStatus?: string;` to the Machine type to hold the status from backend.
-
-2. **MachinesPage Enhancement**: 
-   - Removed license fetching and computation logic
-   - Now relies on the back-ativos backend to provide `antVirusStatus` directly in machine data
-
-3. **MachineCard Update**: Updated display logic to show 'Ativo' for 'ativo', 'Inativo' for 'inativo', or 'Sem Licença'
-
-4. **License Service Update**: Removed client-side status computation, using backend-provided status instead.
-
-5. **Testing**: Run the app and verify that machine cards show correct license statuses from back-ativos.
+- [x] Update cadLicense.ts to include an optional machine array
+- [x] Add new API function in license.service.ts for /with-machines endpoint
+- [x] Create LicenseMachinesPage.tsx to display machines for a license
+- [x] Add new route in App.tsx for /license/:id/machines
+- [x] Modify LicenseGrid.tsx to add onClick handler for "Máquinas Por Licença" button
+- [x] Implement back button in LicenseMachinesPage

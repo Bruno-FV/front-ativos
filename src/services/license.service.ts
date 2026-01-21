@@ -20,3 +20,8 @@ export const deleteLicense = async (id: string) => {
   const response = await api.delete(`/licenses/delete/${id}`);
   return response.data;
 };
+
+export const getLicenseWithMachines = async (id: string) => {
+  const response = await api.get(`/licenses/with-machines/${id}`);
+  return response.data;
+};

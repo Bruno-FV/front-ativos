@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Edit,Server, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface LicenseGridProps {
   licenses: cadLicense[];
@@ -11,6 +12,12 @@ interface LicenseGridProps {
 }
 
 const LicenseGrid = ({ licenses, onEdit, onDelete }: LicenseGridProps) => {
+  const navigate = useNavigate();
+
+  const handleViewMachines = (licenseId: string) => {
+    navigate(`/license/${licenseId}/machines`);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {licenses.map((license) => (
@@ -36,9 +43,10 @@ const LicenseGrid = ({ licenses, onEdit, onDelete }: LicenseGridProps) => {
                 variant="outline"
                 size="sm"
                 className="flex-1"
+                onClick={() => handleViewMachines(license.id)}
               >
                 <Server className="w-4 h-4 mr-2" />
-                Máquinas
+                Máquinas Por Licença
               </Button>
               </div>
             </div>

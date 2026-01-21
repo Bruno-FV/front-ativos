@@ -11,6 +11,7 @@ import ExtensionsPublic from "./pages/ExtensionsPublic";
 import NotFound from "./pages/NotFound";
 import path from 'path';
 import LicenseAntiVirus from "./pages/LicenseAntiVirus";
+import LicenseMachinesPage from "./pages/LicenseMachinesPage";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/extensions" element={<ExtensionsPage />} />
             <Route path="/extensionsPublic" element={<ExtensionsPublic />} />
             <Route path="/license" element={<LicenseAntiVirus />} />
+            <Route path="/license/:id/machines" element={<LicenseMachinesPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
