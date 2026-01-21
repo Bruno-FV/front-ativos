@@ -48,11 +48,11 @@ const MachinesPage = () => {
         // Computa o status da licença de antivírus para cada máquina
         const machinesWithStatus = machinesData.map((machine) => {
           const matchingLicense = licensesData.find(
-            (license) => license.keyLisence === machine.antVirusLicense
+            (license) => license.id === machine.antVirusLicense
           );
           return {
             ...machine,
-            antVirusStatus: matchingLicense ? matchingLicense.status : "inactive",
+            antVirusStatus: matchingLicense ? matchingLicense.status : "inativo",
           };
         });
         setMachines(machinesWithStatus);
@@ -165,14 +165,17 @@ const MachinesPage = () => {
   const refreshMachines = async () => {
     try {
       setIsLoading(true);
-      const [machinesData, licensesData] = await Promise.all([
-        getAllMachines(),
-        getAllLicenses(),
-      ]);
+      const machinesData = await getAllMachines();
+      let licensesData: cadLicense[] = [];
+      try {
+        licensesData = await getAllLicenses();
+      } catch (licenseError) {
+        console.warn("Erro ao buscar licenças, definindo status como inativo:", licenseError);
+      }
       // Computa o status da licença de antivírus para cada máquina
       const machinesWithStatus = machinesData.map((machine) => {
         const matchingLicense = licensesData.find(
-          (license) => license.keyLisence === machine.antVirusLicense
+          (license) => license.id === machine.antVirusLicense
         );
         return {
           ...machine,

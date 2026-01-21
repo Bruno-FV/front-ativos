@@ -57,7 +57,7 @@ const MachineFormDialog = ({
     if (machine) {
       console.log("verificando array: ", machine);
       reset(machine);
-      // Correção: Definir o ID da licença selecionada baseado na keyLisence da máquina existente para que o Select mostre a seleção correta
+      // Definir o ID da licença selecionada baseado na keyLisence da máquina existente
       const matchingLicense = licenses.find(l => l.keyLisence === machine.antVirusLicense);
       setSelectedLicenseId(matchingLicense ? matchingLicense.id : "");
     } else {
@@ -75,7 +75,7 @@ const MachineFormDialog = ({
         antVirusStatus: "",
         status: "online",
       });
-      // Correção: Resetar o ID da licença selecionada para nova máquina
+      // Resetar o ID da licença selecionada para nova máquina
       setSelectedLicenseId("");
     }
   }, [machine, reset, licenses]);

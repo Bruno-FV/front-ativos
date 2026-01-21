@@ -10,6 +10,6 @@ export interface Machine {
   tipoArmazenamento: string;
   antVirusLicense: string;
   licensaOffice: string;
-  antVirusStatus?: string;
+  antVirusStatus: string;
   status?: 'online' | 'offline' | 'maintenance';
 }
