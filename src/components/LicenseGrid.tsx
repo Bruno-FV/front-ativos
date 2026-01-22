@@ -2,7 +2,16 @@ import { cadLicense } from "@/types/cadLicense";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Edit, FileKey2, Server, Trash2 } from "lucide-react";
+import {
+  Calendar1,
+  CalendarArrowDown,
+  CalendarArrowUp,
+  Edit,
+  FileKey2,
+  Server,
+  Shield,
+  Trash2,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface LicenseGridProps {
@@ -25,7 +34,16 @@ const LicenseGrid = ({ licenses, onEdit, onDelete }: LicenseGridProps) => {
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg font-semibold">
-                {license.versionAntiVirus}
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10 border border-primary/20 group-hover:bg-primary/20 group-hover:border-primary/40 transition-all duration-300">
+                    <Shield className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-foreground truncate group-hover:text-primary transition-colors duration-300">
+                       {license.versionAntiVirus}
+                    </h3>
+                  </div>
+                </div>
               </CardTitle>
               <Badge
                 variant={license.status === "active" ? "default" : "secondary"}
@@ -36,7 +54,7 @@ const LicenseGrid = ({ licenses, onEdit, onDelete }: LicenseGridProps) => {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="text-sm text-muted-foreground">
-              <div className="flex items-center gap-3 p-3 rounded-md bg-secondary/50 border border-border/30">
+              <div className="flex items-center mb-1 gap-3 p-3 rounded-md bg-secondary/50 border border-border/30">
                 <FileKey2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                 <div className="min-w-0">
                   <p className="text-xs text-muted-foreground">Chave</p>
@@ -45,26 +63,40 @@ const LicenseGrid = ({ licenses, onEdit, onDelete }: LicenseGridProps) => {
                   </p>
                 </div>
               </div>
+              <div className="flex items-center mb-1 gap-3 p-3 rounded-md bg-secondary/50 border border-border/30">
+                <CalendarArrowUp className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs text-muted-foreground">Início</p>
+                  <p className="text-sm text-foreground truncate">
+                    {new Date(
+                      license.dateStartLisence.split("/").reverse().join("-"),
+                    ).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center mb-1 gap-3 p-3 rounded-md bg-secondary/50 border border-border/30">
+                <CalendarArrowDown className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs text-muted-foreground">Fim</p>
+                  <p className="text-sm text-foreground truncate">
+                    {new Date(
+                      license.dateEndLisence.split("/").reverse().join("-"),
+                    ).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center mb-1 gap-3 p-3 rounded-md bg-secondary/50 border border-border/30">
+                <Calendar1 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs text-muted-foreground">Registro</p>
+                  <p className="text-sm text-foreground truncate">
+                    {new Date(
+                      license.registrationDate.split("/").reverse().join("-"),
+                    ).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
 
-              
-              <p>
-                <strong>Início:</strong>{" "}
-                {new Date(
-                  license.dateStartLisence.split("/").reverse().join("-"),
-                ).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>Fim:</strong>{" "}
-                {new Date(
-                  license.dateEndLisence.split("/").reverse().join("-"),
-                ).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>Registro:</strong>{" "}
-                {new Date(
-                  license.registrationDate.split("/").reverse().join("-"),
-                ).toLocaleDateString()}
-              </p>
               <div className="flex gap-2 pt-2">
                 <Button
                   variant="outline"
