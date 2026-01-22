@@ -28,6 +28,8 @@ export class AuthService {
       // Cria objeto User a partir da resposta
       const user: User = {
         id: '', // O backend pode não retornar o ID na resposta de login
+        name: response.name,
+        sector: "",
         email: response.email,
         role: response.role as 'ROLE_ADMIN' | 'ROLE_USER',
       };

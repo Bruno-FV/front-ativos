@@ -24,6 +24,8 @@ export interface AuthResponse {
   email: string;
   /** Role do usuário autenticado (ROLE_ADMIN, ROLE_USER) */
   role: string;
+  /**Nome do Usuário autenticado */
+  name: string;
 }
 
 /**
@@ -39,6 +41,10 @@ export interface User {
   password?: string;
   /** Role do usuário (ROLE_ADMIN, ROLE_USER) */
   role: 'ROLE_ADMIN' | 'ROLE_USER';
+  /** Nome do usuário */
+  name: string;
+  /** Setor do Usuário */
+  sector: string;
 }
 
 /**

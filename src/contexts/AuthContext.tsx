@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Mostra mensagem de sucesso
       toast({
         title: "Login realizado com sucesso!",
-        description: `Bem-vindo, ${loggedUser.email}!`,
+        description: `Bem-vindo, ${loggedUser.name}!`,
       });
 
     } catch (error) {

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { CircleUserRound, Eye, EyeOff, Lock, Mail, MapPin, User } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import logo from "/Logo.png";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,6 +16,8 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
+    name: "",
+    sector: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -131,6 +133,44 @@ const RegisterPage = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-foreground">
+                    Nome *
+                  </Label>
+                  <div className="relative">
+                    <CircleUserRound className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="name"
+                      type="name"
+                      placeholder="Digite seu nome"
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      className="pl-10 bg-background/50 border-border/50 focus:border-primary transition-all duration-300"
+                      required
+                    />
+                  </div>
+                </div>
+                 <div className="space-y-2">
+                  <Label htmlFor="sector" className="text-foreground">
+                    Setor *
+                  </Label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="sector"
+                      type="sector"
+                      placeholder="Digite seu nome"
+                      value={formData.sector}
+                      onChange={(e) =>
+                        setFormData({ ...formData, sector: e.target.value })
+                      }
+                      className="pl-10 bg-background/50 border-border/50 focus:border-primary transition-all duration-300"
+                      required
+                    />
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-foreground">
                     Email *
