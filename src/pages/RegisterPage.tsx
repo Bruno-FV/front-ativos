@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Eye, EyeOff, Lock, User, Mail } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import logo from "/Logo.png";
 import { useAuth } from "@/contexts/AuthContext";
@@ -97,24 +97,6 @@ const RegisterPage = () => {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-primary/10" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
-
-        {/* Floating particles effect */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-primary/20 animate-float"
-              style={{
-                width: `${Math.random() * 10 + 5}px`,
-                height: `${Math.random() * 10 + 5}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${Math.random() * 10 + 10}s`,
-              }}
-            />
-          ))}
-        </div>
       </div>
 
       {/* Register Container */}

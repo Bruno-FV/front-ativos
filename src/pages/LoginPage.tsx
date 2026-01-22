@@ -43,24 +43,6 @@ const LoginPage = () => {
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-primary/10" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
-
-        {/* Floating particles effect */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-primary/20 animate-float"
-              style={{
-                width: `${Math.random() * 10 + 5}px`,
-                height: `${Math.random() * 10 + 5}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${Math.random() * 10 + 10}s`,
-              }}
-            />
-          ))}
-        </div>
       </div>
 
       {/* Login Container */}
@@ -70,9 +52,9 @@ const LoginPage = () => {
           <div className="mb-8 flex justify-center">
             <div className="relative">
               <div className="absolute -inset-4 rounded-2xl bg-white/10 backdrop-blur-xl" />
-              <img 
-                src={logo} 
-                alt="Hospital São Rafael" 
+              <img
+                src={logo}
+                alt="Hospital São Rafael"
                 className="relative h-20 w-auto rounded-lg bg-white p-3 shadow-2xl"
               />
             </div>
@@ -83,7 +65,7 @@ const LoginPage = () => {
             {/* Glow effects */}
             <div className="absolute -left-20 -top-20 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
             <div className="absolute -bottom-20 -right-20 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
-            
+
             <div className="relative">
               <div className="mb-6 text-center">
                 <h1 className="text-2xl font-bold text-foreground">
@@ -159,7 +141,14 @@ const LoginPage = () => {
                   )}
                 </Button>
               </form>
-
+              <div className="mt-6 text-center">
+                <button
+                  onClick={() => navigate("/register")}
+                  className="text-sm text-primary hover:underline"
+                >
+                  Não tem uma conta? Criar
+                </button>
+              </div>
               <div className="mt-6 text-center">
                 <p className="text-xs text-muted-foreground">
                   Hospital São Rafael © {new Date().getFullYear()}

@@ -12,7 +12,6 @@ import ExtensionsPublic from "./pages/ExtensionsPublic";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import NotFound from "./pages/NotFound";
-import { UserRole } from "@/types/auth";
 
 const queryClient = new QueryClient();
 
@@ -38,7 +37,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.Re
 
   // Se requer admin e usuário não é admin, redireciona para extensions
   if (requireAdmin && !isAdmin) {
-    return <Navigate to="/extensions" replace />;
+    return <Navigate to="/extensionsPublic" replace />;
   }
 
   return <>{children}</>;
@@ -67,6 +66,35 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+/**
+ * Componente para rota de registro - acessível para não autenticados (auto-registro) e admins (criar usuários)
+ */
+const RegisterRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, isAdmin, loading } = useAuth();
+
+  // Mostra loading enquanto verifica autenticação
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // Se não está autenticado, permite auto-registro
+  if (!isAuthenticated) {
+    return <>{children}</>;
+  }
+
+  // Se está autenticado e é admin, permite criar usuários
+  if (isAuthenticated && isAdmin) {
+    return <>{children}</>;
+  }
+
+  // Se está autenticado mas não é admin, redireciona para página inicial
+  return <Navigate to="/" replace />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -87,9 +115,9 @@ const App = () => (
             <Route
               path="/register"
               element={
-                <PublicRoute>
+                <RegisterRoute>
                   <RegisterPage />
-                </PublicRoute>
+                </RegisterRoute>
               }
             />
 
@@ -107,13 +135,13 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     {/* Usuários comuns vão para ramais, admins para máquinas */}
-                    <ExtensionsPage />
+                    <ExtensionsPublic />
                   </ProtectedRoute>
                 }
               />
 
               {/* Página de ramais - acessível para todos os usuários autenticados */}
-              <Route path="/extensions" element={<ExtensionsPage />} />
+              <Route path="/extensionsPublic" element={<ExtensionsPublic />} />
 
               {/* Páginas de admin - só para administradores */}
               <Route
@@ -133,14 +161,17 @@ const App = () => (
                 }
               />
               <Route
-                path="/extensionsPublic"
+                path="/extensions"
                 element={
                   <ProtectedRoute requireAdmin>
-                    <ExtensionsPublic />
+                    <ExtensionsPage />
                   </ProtectedRoute>
                 }
               />
+
+
             </Route>
+
 
             {/* Página 404 */}
             <Route path="*" element={<NotFound />} />

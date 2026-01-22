@@ -1,4 +1,4 @@
-import { Server, Wifi, Phone, PanelLeft } from "lucide-react";
+import { Server, Wifi, Phone } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -15,18 +15,20 @@ import {
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { title } from "process";
+import { url } from "inspector";
 
 // Itens de menu para administradores
 const adminMenuItems = [
+  { title: "Registro", url: "/register", icon: Server},
   { title: "Máquinas", url: "/machines", icon: Server },
   { title: "Roteadores", url: "/routers", icon: Wifi },
   { title: "Ramais", url: "/extensions", icon: Phone },
-  { title: "HSR Ramais", url: "/extensionsPublic", icon: Phone },
 ];
 
 // Itens de menu para usuários comuns (apenas ramais)
 const userMenuItems = [
-  { title: "Ramais", url: "/extensions", icon: Phone },
+  { title: "Ramais HSR", url: "/extensionsPublic", icon: Phone },
 ];
 
 export function AppSidebar() {
