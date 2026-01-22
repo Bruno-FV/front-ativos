@@ -2,7 +2,7 @@ import { cadLicense } from "@/types/cadLicense";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Edit,Server, Trash2 } from "lucide-react";
+import { Edit, FileKey2, Server, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface LicenseGridProps {
@@ -27,27 +27,54 @@ const LicenseGrid = ({ licenses, onEdit, onDelete }: LicenseGridProps) => {
               <CardTitle className="text-lg font-semibold">
                 {license.versionAntiVirus}
               </CardTitle>
-              <Badge variant={license.status === "active" ? "default" : "secondary"}>
+              <Badge
+                variant={license.status === "active" ? "default" : "secondary"}
+              >
                 {license.status === "active" ? "Ativo" : "Inativo"}
               </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="text-sm text-muted-foreground">
-              <p><strong>Chave:</strong> {license.keyLisence}</p>
-              <p><strong>Início:</strong> {new Date(license.dateStartLisence.split('/').reverse().join('-')).toLocaleDateString()}</p>
-              <p><strong>Fim:</strong> {new Date(license.dateEndLisence.split('/').reverse().join('-')).toLocaleDateString()}</p>
-              <p><strong>Registro:</strong> {new Date(license.registrationDate.split('/').reverse().join('-')).toLocaleDateString()}</p>
+              <div className="flex items-center gap-3 p-3 rounded-md bg-secondary/50 border border-border/30">
+                <FileKey2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs text-muted-foreground">Chave</p>
+                  <p className="text-sm text-foreground truncate">
+                    {license.keyLisence}
+                  </p>
+                </div>
+              </div>
+
+              
+              <p>
+                <strong>Início:</strong>{" "}
+                {new Date(
+                  license.dateStartLisence.split("/").reverse().join("-"),
+                ).toLocaleDateString()}
+              </p>
+              <p>
+                <strong>Fim:</strong>{" "}
+                {new Date(
+                  license.dateEndLisence.split("/").reverse().join("-"),
+                ).toLocaleDateString()}
+              </p>
+              <p>
+                <strong>Registro:</strong>{" "}
+                {new Date(
+                  license.registrationDate.split("/").reverse().join("-"),
+                ).toLocaleDateString()}
+              </p>
               <div className="flex gap-2 pt-2">
                 <Button
-                variant="outline"
-                size="sm"
-                className="flex-1"
-                onClick={() => handleViewMachines(license.id)}
-              >
-                <Server className="w-4 h-4 mr-2" />
-                Máquinas Por Licença
-              </Button>
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => handleViewMachines(license.id)}
+                >
+                  <Server className="w-4 h-4 mr-2" />
+                  Máquinas Por Licença
+                </Button>
               </div>
             </div>
             <div className="flex gap-2 pt-2">
