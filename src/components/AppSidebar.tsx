@@ -1,6 +1,7 @@
 import { Server, Wifi, Phone, PanelLeft, Icon, Shield } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 import {
   Sidebar,
@@ -17,6 +18,7 @@ import {
 import { title } from "process";
 
 const menuItems = [
+  { title: "Registro", url: "/register", icon: Server},
   { title: "Máquinas", url: "/", icon: Server },
   { title: "Roteadores", url: "/routers", icon: Wifi },
   { title: "Ramais", url: "/extensions", icon: Phone },
@@ -27,6 +29,7 @@ const menuItems = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
+  const { isAdmin } = useAuth();
   const collapsed = state === "collapsed";
 
   return (
