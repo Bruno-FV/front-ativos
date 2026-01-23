@@ -16,14 +16,19 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { title } from "process";
+import { url } from "inspector";
 
 const menuItems = [
   { title: "Registro", url: "/register", icon: Server},
-  { title: "Máquinas", url: "/", icon: Server },
+  { title: "Máquinas", url: "/machines", icon: Server },
   { title: "Roteadores", url: "/routers", icon: Wifi },
   { title: "Ramais", url: "/extensions", icon: Phone },
   { title: "HSR Ramais", url: "/extensionsPublic", icon: Phone },
   { title: "Licenças", url: "/license", icon: Shield},
+];
+// Itens de menu para usuários comuns (apenas ramais)
+const userMenuItems = [
+  { title: "Ramais HSR", url: "/extensionsPublic", icon: Phone },
 ];
 
 export function AppSidebar() {
@@ -58,7 +63,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Ativos</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => {
+              {(isAdmin ? menuItems : userMenuItems).map((item) => {
                 const isActive = location.pathname === item.url;
                 return (
                   <SidebarMenuItem key={item.title}>
