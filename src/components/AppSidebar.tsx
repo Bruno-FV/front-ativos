@@ -1,4 +1,4 @@
-import { Server, Wifi, Phone, PanelLeft, Icon, Shield } from "lucide-react";
+import { Server, Wifi, Phone, PanelLeft, Icon, Shield, SquareUserRound } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -19,11 +19,10 @@ import { title } from "process";
 import { url } from "inspector";
 
 const menuItems = [
-  { title: "Registro", url: "/register", icon: Server},
+  { title: "Registro", url: "/register", icon: SquareUserRound},
   { title: "Máquinas", url: "/machines", icon: Server },
   { title: "Roteadores", url: "/routers", icon: Wifi },
   { title: "Ramais", url: "/extensions", icon: Phone },
-  { title: "HSR Ramais", url: "/extensionsPublic", icon: Phone },
   { title: "Licenças", url: "/license", icon: Shield},
 ];
 // Itens de menu para usuários comuns (apenas ramais)

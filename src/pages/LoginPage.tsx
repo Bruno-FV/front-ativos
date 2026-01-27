@@ -3,12 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Lock, User } from "lucide-react";
+import { Eye, EyeOff, Lock, Moon, Sun, User } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "/Logo.png";
+import Footer from "@/components/Footer";
+import { useTheme } from "next-themes";
 
 const LoginPage = () => {
+  // CONTROLE GLOBAL DE TEMA (CORRETO)
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const { login, loading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
@@ -39,6 +43,20 @@ const LoginPage = () => {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
+      <div className="flex items-end justify-end mt-4 mr-2 relative z-50 overflow-hidden">
+        {/* Botão de alternância de tema */}
+        <Button
+          variant="ghost"
+          size="lg"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        >
+          {theme === "dark" ? (
+            <Sun className="!h-8 !w-8" />
+          ) : (
+            <Moon className="!h-8 !w-8" />
+          )}
+        </Button>
+      </div>
       {/* Animated Background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-primary/10" />
@@ -157,6 +175,9 @@ const LoginPage = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="z-50 relative flex">
+        <Footer />
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CircleUserRound, Eye, EyeOff, Lock, Mail, MapPin, User } from "lucide-react";
+import { ArrowLeft, CircleUserRound, Eye, EyeOff, Lock, Mail, MapPin, User } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import logo from "/Logo.png";
 import { useAuth } from "@/contexts/AuthContext";
@@ -84,6 +84,8 @@ const RegisterPage = () => {
         email: formData.email,
         password: formData.password,
         role: formData.role,
+        name: formData.name,
+        sector: formData.sector,
       });
 
       // Redireciona para login após registro bem-sucedido
@@ -96,9 +98,15 @@ const RegisterPage = () => {
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* Animated Background */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-primary/10" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
+      </div>
+      <div className="flex items-end justify-end mt-4 mr-2 relative z-50">
+         <Button onClick={() => navigate("/")}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar
+          </Button>
       </div>
 
       {/* Register Container */}

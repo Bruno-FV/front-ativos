@@ -18,6 +18,14 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 /**
+ * Componente para a página inicial - redireciona baseado no role do usuário
+ */
+const HomePage = () => {
+  const { isAdmin } = useAuth();
+  return isAdmin ? <MachinesPage /> : <ExtensionsPublic />;
+};
+
+/**
  * Componente para proteger rotas que requerem autenticação
  */
 const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.ReactNode; requireAdmin?: boolean }) => {
@@ -136,14 +144,22 @@ const App = () => (
                 path="/"
                 element={
                   <ProtectedRoute>
+                    <HomePage />
+                  </ProtectedRoute>
+                }
+              />
+               <Route
+                path="/extensionsPublic"
+                element={
+                  <ProtectedRoute>
                     {/* Usuários comuns vão para ramais, admins para máquinas */}
                     <ExtensionsPublic />
                   </ProtectedRoute>
                 }
               />
 
-              {/* Página de ramais - acessível para todos os usuários autenticados */}
-              <Route path="/extensionsPublic" element={<ExtensionsPublic />} />
+              {/* Página de ramais - acessível para todos os usuários autenticados 
+              <Route path="/extensionsPublic" element={<ExtensionsPublic />} />*/}
 
               {/* Páginas de admin - só para administradores */}
               <Route

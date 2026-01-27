@@ -58,6 +58,10 @@ export interface RegisterRequest {
   password: string;
   /** Role do novo usuário (só admin pode definir ROLE_ADMIN) */
   role: 'ROLE_ADMIN' | 'ROLE_USER';
+  /** Nome do usuário */
+  name: string;
+  /** Setor do Usuário */
+  sector: string;
 }
 
 /**

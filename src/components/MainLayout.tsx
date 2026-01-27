@@ -34,10 +34,10 @@ export default function MainLayout() {
   // Função para formatar o role do usuário
   const formatRole = (role: string) => {
     switch (role) {
-      case 'ROLE_ADMIN':
-        return 'Administrador';
-      case 'ROLE_USER':
-        return 'Usuário';
+      case "ROLE_ADMIN":
+        return "Administrador";
+      case "ROLE_USER":
+        return "Usuário";
       default:
         return role;
     }
@@ -59,10 +59,17 @@ export default function MainLayout() {
               {/* Menu do usuário */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Button
+                    variant="ghost"
+                    className="relative h-10 w-10 rounded-full"
+                  >
                     <Avatar className="h-10 w-10">
                       <AvatarFallback className="bg-primary text-primary-foreground">
-                        {user ? getUserInitials(user.email) : <User className="h-4 w-4" />}
+                        {user ? (
+                          getUserInitials(user.email)
+                        ) : (
+                          <User className="h-4 w-4" />
+                        )}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -74,12 +81,15 @@ export default function MainLayout() {
                         {user?.email}
                       </p>
                       <p className="text-xs leading-none text-muted-foreground">
-                        {user ? formatRole(user.role) : ''}
+                        {user ? formatRole(user.role) : ""}
                       </p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout} className="text-red-600 focus:text-red-600">
+                  <DropdownMenuItem
+                    onClick={logout}
+                    className="text-red-600 focus:text-red-600"
+                  >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Sair</span>
                   </DropdownMenuItem>
@@ -104,6 +114,7 @@ export default function MainLayout() {
           <main className="flex-1">
             <Outlet />
           </main>
+
           <Footer />
         </SidebarInset>
       </div>

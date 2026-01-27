@@ -4,7 +4,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="py-12 border-t border-border">
+    <footer className="py-2 w-full z-50 border-t border-border">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo & Copyright */}
@@ -19,32 +19,18 @@ const Footer = () => {
           </div>
 
           {/* Social Links */}
+          
           <div className="flex items-center gap-4">
+            {/**
             <a
-              href="https://github.com/Bruno-FV"
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-secondary hover:bg-muted transition-colors text-muted-foreground hover:text-primary"
               aria-label="GitHub"
             >
               <Github className="w-5 h-5" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/bruno-ferreira-vieira/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-full bg-secondary hover:bg-muted transition-colors text-muted-foreground hover:text-primary"
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="w-5 h-5" />
-            </a>
-            <a
-              href="mailto:bfvdesenvolvimentos@gmail.com"
-              className="p-3 rounded-full bg-secondary hover:bg-muted transition-colors text-muted-foreground hover:text-primary"
-              aria-label="Email"
-            >
-              <Mail className="w-5 h-5" />
-            </a>
+            </a>x */}
           </div>
 
           {/* Made with love */}

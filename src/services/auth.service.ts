@@ -28,7 +28,7 @@ export class AuthService {
       // Cria objeto User a partir da resposta
       const user: User = {
         id: '', // O backend pode não retornar o ID na resposta de login
-        name: response.name,
+        name: response.name || '', // Fallback para string vazia se name não existir
         sector: "",
         email: response.email,
         role: response.role as 'ROLE_ADMIN' | 'ROLE_USER',
@@ -159,3 +159,7 @@ export class AuthService {
     return user?.role === 'ROLE_ADMIN';
   }
 }
+function toast(arg0: { variant: string; title: string; description: string; }) {
+  throw new Error('Function not implemented.');
+}
+

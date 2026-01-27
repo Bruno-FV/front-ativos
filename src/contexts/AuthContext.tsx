@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Mostra mensagem de sucesso
       toast({
         title: "Login realizado com sucesso!",
-        description: `Bem-vindo, ${loggedUser.name}!`,
+        description: loggedUser.name ? `Bem-vindo, ${loggedUser.name}!` : "Bem-vindo!",
       });
 
     } catch (error) {
@@ -86,12 +86,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
 
     } catch (error) {
-      // Mostra mensagem de erro
-      toast({
-        title: "Erro no registro",
-        description: error instanceof Error ? error.message : "Erro desconhecido",
-        variant: "destructive",
-      });
+      console.log("erro do console: ",error)
+      // Trata erro específico de email já cadastrado
+      if (error instanceof Error && error.message === "Request failed with status code 409") {
+        toast({
+          title: "Email já cadastrado",
+          description: "Este email já está registrado. Tente fazer login ou use outro email.",
+          variant: "destructive",
+        });
+      } else {
+        // Mostra mensagem de erro genérica
+        toast({
+          title: "Erro no registro",
+          description: error instanceof Error ? error.message : "Erro desconhecido",
+          variant: "destructive",
+        });
+      }
       throw error;
     } finally {
       setLoading(false);
