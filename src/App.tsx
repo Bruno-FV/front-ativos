@@ -14,6 +14,7 @@ import RegisterPage from "./pages/RegisterPage";
 import LicenseAntiVirus from "./pages/LicenseAntiVirus";
 import LicenseMachinesPage from "./pages/LicenseMachinesPage";
 import NotFound from "./pages/NotFound";
+import PrintersPage from "./pages/PrintersPage";
 
 const queryClient = new QueryClient();
 
@@ -200,6 +201,14 @@ const App = () => (
                 element={
                   <ProtectedRoute requireAdmin>
                     <ExtensionsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/printers"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <PrintersPage />
                   </ProtectedRoute>
                 }
               />

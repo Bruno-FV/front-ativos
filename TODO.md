@@ -1,19 +1,8 @@
-# Correções de Roles e Direcionamento
+# TODO: Fix PrintersPage.tsx Errors
 
-## Problemas Identificados
-- [x] AppSidebar.tsx: Sidebar mostra todas as rotas independente do role
-- [x] ExtensionsPublic.tsx: Chamada para /extensions/all causando 403 Forbidden
-- [x] Verificar se há endpoint público para ramais ou ajustar lógica
-- [x] Login admin redirecionando para extensionsPublic ao invés de máquinas
-
-## Correções Necessárias
-- [x] Modificar AppSidebar.tsx para condicional baseado em isAdmin
-- [x] Investigar endpoint correto para ramais públicos
-- [x] Verificar outras inconsistências de roles no código
-- [x] Criar componente HomePage condicional para rota raiz "/"
-- [x] Testar correções
-
-## Status
-- [x] Análise inicial concluída
-- [x] Correções implementadas
-- [ ] Testes realizados
+## Tasks
+- [x] Remove MainLayout wrapper from PrintersPage.tsx to match RoutersPage.tsx layout
+- [x] Replace PrinterGrid component with direct grid implementation using PrinterCard
+- [x] Add stats calculation for PrinterStatsBar to provide necessary data
+- [x] Verify all changes align with RoutersPage.tsx structure
+- [x] Test the updated PrintersPage.tsx for any remaining issues

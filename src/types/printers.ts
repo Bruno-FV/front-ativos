@@ -3,4 +3,5 @@ export interface Printers{
     connectionType: string;
     sector: string;
     model: string;
+    status: string;
 }
