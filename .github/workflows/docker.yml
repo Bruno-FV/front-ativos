@@ -26,6 +26,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: |
-            ghcr.io/bruno-fv/front-ativos:latest
-            ghcr.io/bruno-fv/front-ativos:main
+          tags: ghcr.io/bruno-fv/front-ativos:latest
