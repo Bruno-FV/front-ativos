@@ -1,4 +1,4 @@
-name: Build and Push Frontend
+name: Build and Push Front
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build e Push da imagem
+      - name: Build e Push
         uses: docker/build-push-action@v5
         with:
           push: true
