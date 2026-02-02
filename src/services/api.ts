@@ -2,7 +2,7 @@ import axios from "axios";
 import { AuthResponse, LoginRequest, RegisterRequest } from "@/types/auth";
 
 // URL base da API com fallback
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://192.168.254.62:8080';
 
 // Cria instância base do axios
 export const api = axios.create({
